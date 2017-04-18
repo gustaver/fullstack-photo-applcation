@@ -43,11 +43,25 @@ func getHandler(writer http.ResponseWriter, request *http.Request) {
 }
 
 func uploadHandler(writer http.ResponseWriter, request *http.Request) {
-
+	err := data.UploadPhoto(request)
+	if err != nil {
+		// Error during photo upload
+		http.Error(writer, err.Message, err.StatusCode)
+	} else {
+		// Send an OK as response since the photo has been uploaded (no error)
+		writer.WriteHeader(200)
+	}
 }
 
 func removeHandler(writer http.ResponseWriter, request *http.Request) {
-
+	err := data.RemovePhoto(request)
+	if err != nil {
+		// Error during photo upload
+		http.Error(writer, err.Message, err.StatusCode)
+	} else {
+		// Send an OK as response since the photo has been uploaded (no error)
+		writer.WriteHeader(200)
+	}
 }
 
 // The main function that sets upp all the handle functions and calls ListenAndServe

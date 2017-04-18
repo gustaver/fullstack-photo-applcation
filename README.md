@@ -1,7 +1,7 @@
 # PhotoFullStack
 
 ## What is this?
-PhotoFullStack is a photo application which consists of a back-end built in Go and two front-end applications built for Android (using Java) and iOS (using Swift).
+PhotoFullStack is a photo application which consists of a back-end built in Go using MongoDB and two front-end applications built for Android (using Java) and iOS (using Swift).
 
 The features of the application are displaying, adding and removing a user's photos and login functionality.
 

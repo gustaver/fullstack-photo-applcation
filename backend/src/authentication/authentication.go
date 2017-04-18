@@ -49,11 +49,11 @@ func AuthenticateUser(request *http.Request) (*model.Token, *model.Error) {
 }
 
 func generateToken() *model.Token {
-	// TODO real generation
+	// TODO real generation of token based on time and valid user
 	return &model.Token{"validToken" }
 }
 
 func AuthenticateToken(request *http.Request) *model.Error {
-	// TODO real authentication
+	// TODO real authentication based on time and token generation
 	return nil
 }
