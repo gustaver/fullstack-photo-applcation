@@ -10,3 +10,8 @@ This will be updated as the project evolves.
 
 ## Testing
 Unit testing will be used thoroughly for the development of the back-end, where we will be using the Go `testing` package. The front-end applications are a bit harder to test properly, and will be tested and debugged while using the applications.
+
+## Project Overview / Roadmap 
+![Roadmap page 1](./images/roadmap_1.png)
+![Roadmap page 2](./images/roadmap_2.png)
+
