@@ -66,8 +66,8 @@ var PhotosFakeDB = []*Photo{
 	},
 }
 
-// If the requested user is in the database and the password matches, return a token.
-// If there was no match, return an error.
+// If the requested user is in the database and the password matches - return a token,
+// if there was no match - return an error
 func AuthenticateUser(request *http.Request) (token *Token, error *Error) {
 	// TODO Make sure the request is POST
 	// Decode the POST request

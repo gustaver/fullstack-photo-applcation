@@ -11,13 +11,21 @@ func init() {
 	log.SetPrefix("PhotoFullStack back-end: ")
 }
 
+// Handles authenticating users and sends an error message or a token as the response
 func loginHandler(writer http.ResponseWriter, request *http.Request) {
-	token, err := data.AuthenticateUser(request)
+	if request.Method == "POST" {
+		token, err := data.AuthenticateUser(request)
 
-	if err != nil {
-		json.NewEncoder(writer).Encode(token)
+		if err != nil {
+			// If there was an error, send an error message
+			http.Error(writer, err.Message, err.StatusCode)
+		} else {
+			// Send the token as a response
+			json.NewEncoder(writer).Encode(token)
+		}
 	} else {
-		http.Error(writer, err.Message, err.StatusCode)
+		// Request was not a POST
+		http.Error(writer, "API route only supports method POST", 400)
 	}
 }
 
