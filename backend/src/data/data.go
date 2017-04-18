@@ -2,47 +2,12 @@ package data
 
 import (
 	"net/http"
+	"authentication"
+	"model"
 	"encoding/json"
 )
 
-type User struct {
-	Username string	`json:"username"`
-	Password string `json:"password"`
-}
-
-type Token struct {
-	Token string `json:"token"`
-}
-
-type Photo struct {
-	JpgBase64 string `json:"jpg"`
-	Title string `json:"title"`
-	Description string `json:"description"`
-	Date string `json:"date"`
-	User string `json:"user"`
-}
-
-type Error struct {
-	StatusCode int
-	Message string
-}
-
-var UsersFakeDB = []*User{
-	{
-		"gustave",
-		"12345",
-	},
-	{
-		"oskar",
-		"54321",
-	},
-	{
-		"nobody",
-		"paswd",
-	},
-}
-
-var PhotosFakeDB = []*Photo{
+var PhotosFakeDB = []*model.Photo{
 	{
 		"DAHSkjhjkaHDJKASHKDJ123",
 		"Day at the beach",
@@ -66,35 +31,31 @@ var PhotosFakeDB = []*Photo{
 	},
 }
 
-// If the requested user is in the database and the password matches - return a token,
-// if there was no match - return an error
-func AuthenticateUser(request *http.Request) (token *Token, error *Error) {
-	// TODO Make sure the request is POST
+func GetPhotos(request *http.Request) ([]*model.Photo, *model.Error) {
+	err := authentication.AuthenticateToken(request)
+	if err != nil {
+		return nil, err
+	}
+
 	// Decode the POST request
 	decoder := json.NewDecoder(request.Body)
-	requestUser := new(User)
+	requestUser := new(model.User)
 	// TODO Find a way to handle faulty requests in decoding
-	err := decoder.Decode(requestUser)
-	if err != nil {
+	decodeErr := decoder.Decode(requestUser)
+	if decodeErr != nil {
 		panic(err)
 	}
 	// Close JSON decoder when function returns
 	defer request.Body.Close()
 
-	// If there's a matching user in the database, return a token
-	for _, dbUser := range UsersFakeDB {
-		if requestUser.Username == dbUser.Username && requestUser.Password == dbUser.Password {
-			// TODO Generate a token
-			return &Token{ "validToken" }, nil
+
+	photoArray := []*model.Photo{}
+	for _, photo := range PhotosFakeDB {
+		if photo.User == requestUser.Username {
+			photoArray = append(photoArray, photo)
 		}
 	}
-
-	// No matching user, return an error
-	return nil, &Error{ 401, "Username and password combination does not exist" }
-}
-
-func GetPhotos(request *http.Request) {
-
+	return photoArray, nil
 }
 
 func UploadPhoto(request *http.Request) {

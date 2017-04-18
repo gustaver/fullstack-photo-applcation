@@ -2,9 +2,10 @@ package main
 
 import (
 	"net/http"
-	"data"
 	"encoding/json"
 	"log"
+	"authentication"
+	"data"
 )
 
 func init() {
@@ -14,7 +15,7 @@ func init() {
 // Handles authenticating users and sends an error message or a token as the response
 func loginHandler(writer http.ResponseWriter, request *http.Request) {
 	if request.Method == "POST" {
-		token, err := data.AuthenticateUser(request)
+		token, err := authentication.AuthenticateUser(request)
 
 		if err != nil {
 			// If there was an error, send an error message
@@ -30,6 +31,14 @@ func loginHandler(writer http.ResponseWriter, request *http.Request) {
 }
 
 func getHandler(writer http.ResponseWriter, request *http.Request) {
+	photoArray, err := data.GetPhotos(request)
+	if err != nil {
+		// If there was an error, send an error message
+		http.Error(writer, err.Message, err.StatusCode)
+	} else {
+		// Send the photo array as a response
+		json.NewEncoder(writer).Encode(photoArray)
+	}
 
 }
 
