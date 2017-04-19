@@ -5,8 +5,10 @@ import (
 	"net/http"
 	"model"
 	"gopkg.in/mgo.v2/bson"
+	"golang.org/x/crypto/bcrypt"
 )
 
+// FIXME: Authentication should be done in HTTP header (good http protocol practice)
 // If the requested user is in the database and the password matches - return a token,
 // if there was no match - return an error
 func AuthenticateUser(request *http.Request) (*model.Token, *model.Error) {
@@ -25,23 +27,35 @@ func AuthenticateUser(request *http.Request) (*model.Token, *model.Error) {
 	if databaseError != nil {
 		// TODO: Better error response based on databaseError
 		// Error querying database or user does not exist
-		return nil, &model.Error{400, "Bad Request"}
+		return nil, &model.Error{401, "Invalid login credentials"}
 	}
-	if databaseUser.Password != requestUser.Password {
-		// password does not match up
-		return nil, &model.Error{400, "Username/Password combination does not exist"}
+
+	passwordError := bcrypt.CompareHashAndPassword([]byte(databaseUser.Password), []byte(requestUser.Password))
+	if passwordError != nil {
+		// Incorrect password
+		return nil, &model.Error{401, "Invalid login credentials"}
 	}
 
 	// No error and user match found, return token and no error
 	return &model.Token{"ValidToken"}, nil
 }
 
+// FIXME: Authentication should be done in HTTP header (good http protocol practice)
 func SignupUser(request *http.Request) (*model.Error) {
 	decodeError, requestUser := decodeJSONToUser(request)
 	if decodeError != nil {
 		// Error decoding, return error
 		return decodeError
 	}
+
+	// Created hashed password
+	hashedPassword, encryptionError := bcrypt.GenerateFromPassword([]byte(requestUser.Password), bcrypt.DefaultCost)
+	if encryptionError != nil {
+		// Internal error making hashed password
+		return &model.Error{500, "Internal server error creating account"}
+	}
+	// Set requestUser (will be put into database) password to encrypted password
+	requestUser.Password = string(hashedPassword)
 
 	// Get collection Users from database
 	usersCollection := model.Database.DB("main").C("users")
