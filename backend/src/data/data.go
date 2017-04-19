@@ -5,6 +5,7 @@ import (
 	"authentication"
 	"model"
 	"encoding/json"
+	"gopkg.in/mgo.v2/bson"
 )
 
 // FIXME: This needs to be based on authenticated user (token perhaps)
@@ -27,8 +28,19 @@ func GetPhotos(request *http.Request) ([]*model.Photo, *model.Error) {
 	defer request.Body.Close()
 
 
+	// Photo array to be populated
 	photoArray := []*model.Photo{}
+	// Get the photos collection from the database
+	photosCollection := model.Database.DB("main").C("photos")
+	// Query database for all photos which are from the authenticated user and populate Photo array with result
+	photoArrayError := photosCollection.Find(bson.M{"user": requestUser.Username}).All(&photoArray)
+	if photoArrayError != nil {
+		// TODO: This might need to be more specific
+		// Error populating photo array
+		return nil, &model.Error{400, "Bad request"}
+	}
 
+	// No error occurred, return photo array (might be empty)
 	return photoArray, nil
 }
 
