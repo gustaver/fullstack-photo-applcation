@@ -6,6 +6,7 @@ import (
 	"log"
 	"authentication"
 	"data"
+	"model"
 )
 
 func init() {
@@ -66,6 +67,9 @@ func removeHandler(writer http.ResponseWriter, request *http.Request) {
 
 // The main function that sets upp all the handle functions and calls ListenAndServe
 func main() {
+	model.InitialiseDatabase("localhost")
+	defer model.Database.Close()
+
 	http.HandleFunc("/login", loginHandler)
 	http.HandleFunc("/get", getHandler)
 	http.HandleFunc("/upload", uploadHandler)
