@@ -37,7 +37,8 @@ func getHandler(writer http.ResponseWriter, request *http.Request) {
 		// If there was an error, send an error message
 		http.Error(writer, err.Message, err.StatusCode)
 	} else {
-		// Send the photo array as a response
+		// Send the photo array as a response and Status OK
+		writer.WriteHeader(http.StatusOK)
 		json.NewEncoder(writer).Encode(photoArray)
 	}
 
@@ -50,7 +51,8 @@ func uploadHandler(writer http.ResponseWriter, request *http.Request) {
 		http.Error(writer, err.Message, err.StatusCode)
 	} else {
 		// Send an OK as response since the photo has been uploaded (no error)
-		writer.WriteHeader(200)
+		writer.WriteHeader(http.StatusOK)
+		writer.Write([]byte("Photo succesfully uploaded"))
 	}
 }
 
@@ -60,8 +62,9 @@ func removeHandler(writer http.ResponseWriter, request *http.Request) {
 		// Error during photo upload
 		http.Error(writer, err.Message, err.StatusCode)
 	} else {
-		// Send an OK as response since the photo has been uploaded (no error)
-		writer.WriteHeader(200)
+		// Send an OK as response since the photo has been removed (no error)
+		writer.WriteHeader(http.StatusOK)
+		writer.Write([]byte("Photo succesfully removed"))
 	}
 }
 

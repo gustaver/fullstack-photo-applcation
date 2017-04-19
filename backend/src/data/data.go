@@ -7,30 +7,6 @@ import (
 	"encoding/json"
 )
 
-var PhotosFakeDB = []*model.Photo{
-	{
-		"DAHSkjhjkaHDJKASHKDJ123",
-		"Day at the beach",
-		"Oh the weather was sooo nice",
-		"Today",
-		"gustave",
-	},
-	{
-		"ASDJODIASHDij12io312",
-		"ASddasd asd asd",
-		"CBA",
-		"Tomrrow",
-		"oskar",
-	},
-	{
-		"ASDasdkoasdlamcxc,mnmn13",
-		"Dpatchaptacha",
-		"CBdsdsdds",
-		"lolomrrow",
-		"oskar",
-	},
-}
-
 // FIXME: This needs to be based on authenticated user (token perhaps)
 func GetPhotos(request *http.Request) ([]*model.Photo, *model.Error) {
 	// Check that the request is properly authenticated
@@ -52,11 +28,7 @@ func GetPhotos(request *http.Request) ([]*model.Photo, *model.Error) {
 
 
 	photoArray := []*model.Photo{}
-	for _, photo := range PhotosFakeDB {
-		if photo.User == requestUser.Username {
-			photoArray = append(photoArray, photo)
-		}
-	}
+
 	return photoArray, nil
 }
 
@@ -74,12 +46,11 @@ func UploadPhoto(request *http.Request) (*model.Error) {
 		return decodeError
 	}
 
-	// TODO: Need to check that incoming request is properly formatted (Photo struct as JSON)
 	// Get the photos collection from the database
 	photosCollection := model.Database.DB("main").C("photos")
 	// Insert new photo into database
-	dataBaseError := photosCollection.Insert(requestPhoto)
-	if dataBaseError != nil {
+	dataBaseInsertError := photosCollection.Insert(requestPhoto)
+	if dataBaseInsertError != nil {
 		// TODO: This might be too generic
 		return &model.Error{400, "Bad Request"}
 	}
@@ -125,10 +96,18 @@ func decodeJSONToPhoto(request *http.Request) (*model.Error, *model.Photo) {
 	// Faulty requests simply return empty arrays
 	decodeErr := decoder.Decode(requestPhoto)
 	if decodeErr != nil {
+		// Something went wrong in JSON decoding
 		return &model.Error{400, "Bad Request"}, nil
 	}
 	// Close JSON decoder when function returns
 	defer request.Body.Close()
+
+	// Validate that photo has been built correctly from JSON
+	validPhotoError := requestPhoto.Validate()
+	if validPhotoError != nil {
+		// JSON request didn't create complete Photo struct
+		return validPhotoError, nil
+	}
 
 	// Return nil (if we get here, no error has occurred) and photo from JSON
 	return nil, requestPhoto
