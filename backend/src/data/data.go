@@ -60,6 +60,7 @@ func UploadPhoto(request *http.Request) (*model.Error) {
 
 	// Get the photos collection from the database
 	photosCollection := model.Database.DB("main").C("photos")
+	// TODO: Check that photo isn't already in database
 	// Insert new photo into database
 	dataBaseInsertError := photosCollection.Insert(requestPhoto)
 	if dataBaseInsertError != nil {

@@ -23,6 +23,7 @@ func loginHandler(writer http.ResponseWriter, request *http.Request) {
 			http.Error(writer, err.Message, err.StatusCode)
 		} else {
 			// Send the token as a response
+			writer.WriteHeader(http.StatusOK)
 			json.NewEncoder(writer).Encode(token)
 		}
 	} else {
@@ -68,16 +69,32 @@ func removeHandler(writer http.ResponseWriter, request *http.Request) {
 	}
 }
 
+func signupHandler(writer http.ResponseWriter, request *http.Request) {
+	err := authentication.SignupUser(request)
+	if err != nil {
+		// Error during signup
+		http.Error(writer, err.Message, err.StatusCode)
+	} else {
+		// Send OK as response since the user signed up successfully
+		writer.WriteHeader(http.StatusOK)
+		writer.Write([]byte("User signup successful"))
+	}
+}
+
 // The main function that sets upp all the handle functions and calls ListenAndServe
 func main() {
+	// Set up database
 	model.InitialiseDatabase("localhost")
 	defer model.Database.Close()
 
+	// Set up all routes
 	http.HandleFunc("/login", loginHandler)
 	http.HandleFunc("/get", getHandler)
 	http.HandleFunc("/upload", uploadHandler)
 	http.HandleFunc("/remove", removeHandler)
+	http.HandleFunc("/signup", signupHandler)
 
+	// Start server
 	port := ":8080"
 	log.Println("Starting server on port", port)
 	http.ListenAndServe(port, nil)

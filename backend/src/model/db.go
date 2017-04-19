@@ -12,4 +12,6 @@ func InitialiseDatabase(databaseSource string) {
 	}
 	Database = session
 	session.SetMode(mgo.Monotonic, true)
+	// Make sure in Safe mode
+	session.SetSafe(&mgo.Safe{})
 }
