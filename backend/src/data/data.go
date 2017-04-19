@@ -5,7 +5,6 @@ import (
 	"authentication"
 	"model"
 	"encoding/json"
-	"log"
 )
 
 var PhotosFakeDB = []*model.Photo{
@@ -75,10 +74,13 @@ func UploadPhoto(request *http.Request) (*model.Error) {
 		return decodeError
 	}
 
+	// TODO: Need to check that incoming request is properly formatted (Photo struct as JSON)
 	// Get the photos collection from the database
 	photosCollection := model.Database.DB("main").C("photos")
+	// Insert new photo into database
 	dataBaseError := photosCollection.Insert(requestPhoto)
 	if dataBaseError != nil {
+		// TODO: This might be too generic
 		return &model.Error{400, "Bad Request"}
 	}
 
@@ -91,8 +93,10 @@ func RemovePhoto(request *http.Request) *model.Error {
 	// Check that the request is properly authenticated
 	err := authentication.AuthenticateToken(request)
 	if err != nil {
+		// Authentication failed
 		return err
 	}
+
 
 	// Decode JSON to get error and requestPhoto
 	decodeError, requestPhoto := decodeJSONToPhoto(request)
@@ -100,17 +104,18 @@ func RemovePhoto(request *http.Request) *model.Error {
 		return decodeError
 	}
 
-	// Find photo (if it exists in DB) and remove
-	for i := len(PhotosFakeDB) - 1; i >= 0; i-- {
-		 currentPhoto := PhotosFakeDB[i]
-		// Condition to decide if current element has to be deleted:
-		if currentPhoto.Title == requestPhoto.Title && currentPhoto.User == requestPhoto.User {
-			PhotosFakeDB = append(PhotosFakeDB[:i], PhotosFakeDB[i+1:]...)
-		}
+	// TODO: Need to check that incoming request is properly formatted (Photo struct as JSON)
+	// Get the photos collection from the database
+	photosCollection := model.Database.DB("main").C("photos")
+	// Remove photo from database
+	removeError := photosCollection.Remove(requestPhoto)
+	if removeError != nil {
+		// Photo not in database
+		return &model.Error{400, "Photo does not exist"}
 	}
 
 	// Once we get here, err should be nil if nothing went wrong, or set to some value if something did go wrong
-	return err
+	return nil
 }
 
 func decodeJSONToPhoto(request *http.Request) (*model.Error, *model.Photo) {
@@ -120,13 +125,10 @@ func decodeJSONToPhoto(request *http.Request) (*model.Error, *model.Photo) {
 	// Faulty requests simply return empty arrays
 	decodeErr := decoder.Decode(requestPhoto)
 	if decodeErr != nil {
-		return &model.Error{
-			400, "Bad Request",
-		}, nil
+		return &model.Error{400, "Bad Request"}, nil
 	}
 	// Close JSON decoder when function returns
 	defer request.Body.Close()
-	log.Print(requestPhoto)
 
 	// Return nil (if we get here, no error has occurred) and photo from JSON
 	return nil, requestPhoto
