@@ -41,7 +41,7 @@ func AuthenticateUser(request *http.Request, database string) (*model.Token, *mo
 	return generateToken(databaseUser), nil
 }
 
-func SignupUser(request *http.Request) (*model.Error) {
+func SignupUser(request *http.Request, database string) (*model.Error) {
 	requestUser, decodeError := decodeJSONToUser(request)
 	if decodeError != nil {
 		// Error decoding, return error
@@ -58,7 +58,7 @@ func SignupUser(request *http.Request) (*model.Error) {
 	requestUser.Password = string(hashedPassword)
 
 	// Get collection Users from database
-	usersCollection := model.Database.DB("main").C("users")
+	usersCollection := model.Database.DB(database).C("users")
 	// Insert user into collection
 	insertError := usersCollection.Insert(requestUser)
 	if insertError != nil {

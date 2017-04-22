@@ -18,7 +18,7 @@ func loginHandler(writer http.ResponseWriter, request *http.Request) {
 	// Only support POST requests
 	if request.Method == "POST" {
 		// Authenticate user and get token
-		token, err := authentication.AuthenticateUser(request, "main")
+		token, err := authentication.AuthenticateUser(request, model.MainDatabase)
 
 		if err != nil {
 			// If there was an error, send an error message
@@ -87,7 +87,7 @@ func signupHandler(writer http.ResponseWriter, request *http.Request) {
 	// Only support POST requests
 	if request.Method == "POST" {
 		// Sign up user from request
-		err := authentication.SignupUser(request)
+		err := authentication.SignupUser(request, model.MainDatabase)
 		if err != nil {
 			// Error during signup
 			http.Error(writer, err.Message, err.StatusCode)
