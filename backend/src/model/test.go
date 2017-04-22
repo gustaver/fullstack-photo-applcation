@@ -41,7 +41,6 @@ func SetupTestDatabase() {
 	clearCollection(TestDatabase, "users")
 	clearCollection(TestDatabase, "photos")
 
-
 	// Populate the database with users and photos
 	populateDatabase(TestDatabase)
 }
