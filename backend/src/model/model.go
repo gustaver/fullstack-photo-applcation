@@ -50,7 +50,8 @@ type Photo struct {
 
 // Validation for Photo type, only checks that all fields are NOT EMPTY in JSON to match Photo struct
 func (photo Photo) Validate() *Error {
-	if photo.User == "" || photo.Date == "" || photo.Description == "" || photo.JpgBase64 == "" || photo.Title == "" {
+	if photo.User == "" || photo.Date == "" || photo.Description == "" ||
+		photo.JpgBase64 == "" || photo.Title == "" {
 		// Not all of the fields have been set
 		return &Error{400, "Invalid photo format"}
 	}

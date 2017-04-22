@@ -75,6 +75,7 @@ func SignupUser(request *http.Request, database string) (*model.Error) {
 	return nil
 }
 
+// Decodes a JSON request to a User struct
 func decodeJSONToUser(request *http.Request) (*model.User, *model.Error) {
 	// Decode the POST request
 	decoder := json.NewDecoder(request.Body)

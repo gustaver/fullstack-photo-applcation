@@ -6,9 +6,14 @@ import (
 	"time"
 )
 
+// Set up everything needed for the tests
+func init() {
+	model.SetupTestDatabase()
+	InitializeTokens()
+}
+
 // Make sure that InitializeTokens initializes the variables needed for tokens
 func TestInitializeTokens(t *testing.T) {
-	InitializeTokens()
 	if tokenMap == nil {
 		t.Error("tokenMap not initialized")
 	}

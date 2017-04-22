@@ -37,8 +37,8 @@ func loginHandler(writer http.ResponseWriter, request *http.Request) {
 func getHandler(writer http.ResponseWriter, request *http.Request) {
 	// Only support GET requests
 	if request.Method == "GET" {
-		// Get photoarray from request
-		photoArray, err := data.GetPhotos(request)
+		// Get photo array from request
+		photoArray, err := data.GetPhotos(request, model.MainDatabase)
 		if err != nil {
 			// If there was an error, send an error message
 			http.Error(writer, err.Message, err.StatusCode)
@@ -55,7 +55,7 @@ func uploadHandler(writer http.ResponseWriter, request *http.Request) {
 	// Only support POST requests
 	if request.Method == "POST" {
 		// Upload photo from request
-		err := data.UploadPhoto(request)
+		err := data.UploadPhoto(request, model.MainDatabase)
 		if err != nil {
 			// Error during photo upload
 			http.Error(writer, err.Message, err.StatusCode)
@@ -71,7 +71,7 @@ func removeHandler(writer http.ResponseWriter, request *http.Request) {
 	// Only support POST requests
 	if request.Method == "POST" {
 		// Remove photo from request
-		err := data.RemovePhoto(request)
+		err := data.RemovePhoto(request, model.MainDatabase)
 		if err != nil {
 			// Error during photo upload
 			http.Error(writer, err.Message, err.StatusCode)

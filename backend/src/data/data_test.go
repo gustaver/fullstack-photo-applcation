@@ -1,16 +1,18 @@
+// The file data_test.go contains tests for getting photos and upload/removal
+
 package data
 
 import (
 	"model"
-	"testing"
+	"authentication"
 )
 
-type TestCase struct {
-	User *model.User
-	Photos *[]*model.Photo
-	CorrectPhotoArray *[]*model.Photo
-	CorrectErrorResponse *model.Error
+// Set up everything needed for the tests
+func init() {
+	model.SetupTestDatabase()
+	authentication.InitializeTokens()
 }
+
 
 // Setup database and such
 func init() {
