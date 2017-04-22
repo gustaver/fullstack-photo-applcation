@@ -7,9 +7,24 @@ import (
 	"gopkg.in/mgo.v2"
 	"golang.org/x/crypto/bcrypt"
 	"gopkg.in/mgo.v2/bson"
+	"net/http"
+	"strings"
 )
 
 const TestDatabase = "test"
+
+// Generates and returns a test request based on the parameters of the function
+func GenerateRequest(query, method, url, token string) *http.Request {
+	reader := strings.NewReader(query)
+	request, requestError := http.NewRequest(method, url, reader)
+	if token != "" {
+		request.Header.Add("Token", token)
+	}
+	if requestError != nil {
+		panic(requestError)
+	}
+	return request
+}
 
 // Clears a collection in a given database database
 func clearCollection(database, collection string) {

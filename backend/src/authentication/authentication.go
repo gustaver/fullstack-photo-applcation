@@ -1,3 +1,5 @@
+// The file authentication.go checks if a user is present in the database, signs up users and decode user JSON
+
 package authentication
 
 import (
@@ -6,7 +8,10 @@ import (
 	"model"
 	"gopkg.in/mgo.v2/bson"
 	"golang.org/x/crypto/bcrypt"
+	"time"
 )
+
+const TokenValidityTime = time.Hour
 
 // If the requested user is in the database and the password matches - return a token,
 // if there was no match - return an error
@@ -38,7 +43,7 @@ func AuthenticateUser(request *http.Request, database string) (*model.Token, *mo
 	}
 
 	// No error, user match found with correct password - return token and no error
-	return generateToken(databaseUser), nil
+	return generateToken(databaseUser, TokenValidityTime), nil
 }
 
 func SignupUser(request *http.Request, database string) (*model.Error) {

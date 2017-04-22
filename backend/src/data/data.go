@@ -10,9 +10,9 @@ import (
 
 func GetPhotos(request *http.Request) ([]*model.Photo, *model.Error) {
 	// Check that the request is properly authenticated
-	err, requestUser := authentication.AuthenticateToken(request)
-	if err != nil {
-		return nil, err
+	requestUser, authError := authentication.AuthenticateToken(request)
+	if authError != nil {
+		return nil, authError
 	}
 
 	// Photo array to be populated
@@ -33,9 +33,9 @@ func GetPhotos(request *http.Request) ([]*model.Photo, *model.Error) {
 
 func UploadPhoto(request *http.Request) (*model.Error) {
 	// Check that the request is properly authenticated
-	authenticationError, requestUser := authentication.AuthenticateToken(request)
-	if authenticationError != nil {
-		return authenticationError
+	requestUser, authError := authentication.AuthenticateToken(request)
+	if authError != nil {
+		return authError
 	}
 
 	//Decode JSON and get photo + error
@@ -62,10 +62,10 @@ func UploadPhoto(request *http.Request) (*model.Error) {
 
 func RemovePhoto(request *http.Request) *model.Error {
 	// Check that the request is properly authenticated
-	err, requestUser := authentication.AuthenticateToken(request)
-	if err != nil {
+	requestUser, authError := authentication.AuthenticateToken(request)
+	if authError != nil {
 		// Authentication failed
-		return err
+		return authError
 	}
 
 
