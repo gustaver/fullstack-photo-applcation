@@ -1,3 +1,5 @@
+// The main.go file contains handlers for requests to the backend, and the main function
+
 package main
 
 import (
@@ -34,6 +36,24 @@ func loginHandler(writer http.ResponseWriter, request *http.Request) {
 	}
 }
 
+// Handles requests to create a new user
+func signupHandler(writer http.ResponseWriter, request *http.Request) {
+	// Only support POST requests
+	if request.Method == "POST" {
+		// Sign up user from request
+		err := authentication.SignupUser(request, model.MainDatabase)
+		if err != nil {
+			// Error during signup
+			http.Error(writer, err.Message, err.StatusCode)
+		} else {
+			// Send OK as response since the user signed up successfully
+			writer.WriteHeader(http.StatusOK)
+			writer.Write([]byte("User signup successful"))
+		}
+	}
+}
+
+// Handles requests to get the photos of a user
 func getHandler(writer http.ResponseWriter, request *http.Request) {
 	// Only support GET requests
 	if request.Method == "GET" {
@@ -51,6 +71,7 @@ func getHandler(writer http.ResponseWriter, request *http.Request) {
 
 }
 
+// Handles requests to upload photos
 func uploadHandler(writer http.ResponseWriter, request *http.Request) {
 	// Only support POST requests
 	if request.Method == "POST" {
@@ -67,6 +88,7 @@ func uploadHandler(writer http.ResponseWriter, request *http.Request) {
 	}
 }
 
+// Handles requests to remove photos
 func removeHandler(writer http.ResponseWriter, request *http.Request) {
 	// Only support POST requests
 	if request.Method == "POST" {
@@ -79,22 +101,6 @@ func removeHandler(writer http.ResponseWriter, request *http.Request) {
 			// Send an OK as response since the photo has been removed (no error)
 			writer.WriteHeader(http.StatusOK)
 			writer.Write([]byte("Photo succesfully removed"))
-		}
-	}
-}
-
-func signupHandler(writer http.ResponseWriter, request *http.Request) {
-	// Only support POST requests
-	if request.Method == "POST" {
-		// Sign up user from request
-		err := authentication.SignupUser(request, model.MainDatabase)
-		if err != nil {
-			// Error during signup
-			http.Error(writer, err.Message, err.StatusCode)
-		} else {
-			// Send OK as response since the user signed up successfully
-			writer.WriteHeader(http.StatusOK)
-			writer.Write([]byte("User signup successful"))
 		}
 	}
 }

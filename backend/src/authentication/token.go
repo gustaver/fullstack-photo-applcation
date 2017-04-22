@@ -33,7 +33,7 @@ func InitializeTokens() {
 }
 
 // Generates and returns new token for a given user with a specified validity time
-func generateToken(user *model.User, validityTime time.Duration) *model.Token {
+func GenerateToken(user *model.User, validityTime time.Duration) *model.Token {
 	// Try to generate a random token until the token is unique, since
 	// the token is long the chances are extremely high that the token is unique
 	duplicate := true

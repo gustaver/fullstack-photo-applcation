@@ -1,3 +1,5 @@
+// Tests for the file token.go
+
 package authentication
 
 import (
@@ -27,7 +29,7 @@ func TestInitializeTokens(t *testing.T) {
 
 // Make sure that generateToken generates a token and removes it after the timeout has expired
 func TestGenerateToken(t *testing.T) {
-	token := generateToken(&model.User{ Username: "user", Password: "password" }, time.Millisecond*500)
+	token := GenerateToken(&model.User{ Username: "user", Password: "password" }, time.Millisecond*500)
 	if _, contains := tokenMap[token.Token]; !contains {
 		t.Error("tokenMap does not contain the newly generated token")
 	}
@@ -39,7 +41,7 @@ func TestGenerateToken(t *testing.T) {
 
 // Test to authenticate token with a valid user present in the tokenMap
 func TestAuthenticateTokenValid(t *testing.T) {
-	token := generateToken(&model.User{ Username: "user1", Password: "password1" }, time.Minute)
+	token := GenerateToken(&model.User{ Username: "user1", Password: "password1" }, time.Minute)
 
 	request := model.GenerateRequest(``,
 		"POST", "http://localhost:8080/login", token.Token)

@@ -43,7 +43,7 @@ func AuthenticateUser(request *http.Request, database string) (*model.Token, *mo
 	}
 
 	// No error, user match found with correct password - return token and no error
-	return generateToken(databaseUser, TokenValidityTime), nil
+	return GenerateToken(databaseUser, TokenValidityTime), nil
 }
 
 func SignupUser(request *http.Request, database string) (*model.Error) {

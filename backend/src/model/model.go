@@ -1,3 +1,5 @@
+// The file model.go contains structs and methods used in the whole project
+
 package model
 
 // Types which implement the InputValidation interface can validate themselves after JSON decoding
