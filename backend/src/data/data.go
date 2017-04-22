@@ -8,31 +8,18 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-// FIXME: This needs to be based on authenticated user (token perhaps)
 func GetPhotos(request *http.Request) ([]*model.Photo, *model.Error) {
 	// Check that the request is properly authenticated
-	err := authentication.AuthenticateToken(request)
+	err, requestUser := authentication.AuthenticateToken(request)
 	if err != nil {
 		return nil, err
 	}
-
-	// Decode the POST request
-	decoder := json.NewDecoder(request.Body)
-	requestUser := new(model.User)
-	// Faulty requests simply return empty arrays
-	decodeErr := decoder.Decode(requestUser)
-	if decodeErr != nil {
-		panic(err)
-	}
-	// Close JSON decoder when function returns
-	defer request.Body.Close()
-
 
 	// Photo array to be populated
 	photoArray := []*model.Photo{}
 	// Get the photos collection from the database
 	photosCollection := model.Database.DB("main").C("photos")
-	// Query database for all photos which are from the authenticated user and populate Photo array with result
+	// Query database for all photos which are from the authenticated requestUser and populate Photo array with result
 	photoArrayError := photosCollection.Find(bson.M{"user": requestUser.Username}).All(&photoArray)
 	if photoArrayError != nil {
 		// TODO: This might need to be more specific
@@ -44,10 +31,9 @@ func GetPhotos(request *http.Request) ([]*model.Photo, *model.Error) {
 	return photoArray, nil
 }
 
-// FIXME: This needs to be based on authenticated user (token perhaps)
 func UploadPhoto(request *http.Request) (*model.Error) {
 	// Check that the request is properly authenticated
-	authenticationError := authentication.AuthenticateToken(request)
+	authenticationError, requestUser := authentication.AuthenticateToken(request)
 	if authenticationError != nil {
 		return authenticationError
 	}
@@ -58,24 +44,25 @@ func UploadPhoto(request *http.Request) (*model.Error) {
 		return decodeError
 	}
 
+	// Set the username of the photo to be that of the authenticated requestUser
+	requestPhoto.User = requestUser.Username
+
 	// Get the photos collection from the database
 	photosCollection := model.Database.DB("main").C("photos")
-	// TODO: Check that photo isn't already in database
 	// Insert new photo into database
-	dataBaseInsertError := photosCollection.Insert(requestPhoto)
-	if dataBaseInsertError != nil {
+	insertError := photosCollection.Insert(requestPhoto)
+	if insertError != nil {
 		// TODO: This might be too generic
-		return &model.Error{400, "Bad Request"}
+		return &model.Error{ StatusCode: 400, Message: "Photo upload failed " + insertError.Error() }
 	}
 
 	// Once we get here, err should be nil if nothing went wrong, or set to some value if something did go wrong
 	return nil
 }
 
-// FIXME: This needs to be based on authenticated user (token perhaps)
 func RemovePhoto(request *http.Request) *model.Error {
 	// Check that the request is properly authenticated
-	err := authentication.AuthenticateToken(request)
+	err, requestUser := authentication.AuthenticateToken(request)
 	if err != nil {
 		// Authentication failed
 		return err
@@ -88,7 +75,9 @@ func RemovePhoto(request *http.Request) *model.Error {
 		return decodeError
 	}
 
-	// TODO: Need to check that incoming request is properly formatted (Photo struct as JSON)
+	// Set the requestUser of the request photo the the requestUser that has been authenticated
+	requestPhoto.User = requestUser.Username
+
 	// Get the photos collection from the database
 	photosCollection := model.Database.DB("main").C("photos")
 	// Remove photo from database
@@ -110,7 +99,7 @@ func decodeJSONToPhoto(request *http.Request) (*model.Error, *model.Photo) {
 	decodeErr := decoder.Decode(requestPhoto)
 	if decodeErr != nil {
 		// Something went wrong in JSON decoding
-		return &model.Error{400, "Bad Request"}, nil
+		return &model.Error{400, "Bad Request, malformatted photo"}, nil
 	}
 	// Close JSON decoder when function returns
 	defer request.Body.Close()

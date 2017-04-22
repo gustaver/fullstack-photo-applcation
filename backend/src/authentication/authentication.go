@@ -8,41 +8,41 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-// FIXME: Authentication should be done in HTTP header (good http protocol practice)
 // If the requested user is in the database and the password matches - return a token,
 // if there was no match - return an error
-func AuthenticateUser(request *http.Request) (*model.Token, *model.Error) {
-	decodeError, requestUser := decodeJSONToUser(request)
+func AuthenticateUser(request *http.Request, database string) (*model.Token, *model.Error) {
+	// Try to decode the requested user JSON
+	requestUser, decodeError := decodeJSONToUser(request)
 	if decodeError != nil {
-		// Error decoding, return error and nil
-		return nil, &model.Error{400, "Bad request"}
+		// Error decoding, return error and no token (nil)
+		return nil, &model.Error{StatusCode: 400, Message: "Authentication failed, malformatted request" }
 	}
 
-	// Get collection Users from database
-	usersCollection := model.Database.DB("main").C("users")
-	// Check if username/password combination exists in database
-	databaseUser := new(model.User)
+	// Get users collection from database
+	usersCollection := model.Database.DB(database).C("users")
+	loginError := &model.Error{StatusCode: 401, Message: "Invalid login credentials" }
+
 	// Query database for user with matching username, store result in databaseUser
+	databaseUser := new(model.User)
 	databaseError := usersCollection.Find(bson.M{"username": requestUser.Username}).One(databaseUser)
 	if databaseError != nil {
-		// TODO: Better error response based on databaseError
-		// Error querying database or user does not exist
-		return nil, &model.Error{401, "Invalid login credentials"}
+		// Error querying database or user does not exist, return loginError
+		return nil, loginError
 	}
 
+	// Hash password in request and compare to found user's password
 	passwordError := bcrypt.CompareHashAndPassword([]byte(databaseUser.Password), []byte(requestUser.Password))
 	if passwordError != nil {
-		// Incorrect password
-		return nil, &model.Error{401, "Invalid login credentials"}
+		// Incorrect password, return loginError
+		return nil, loginError
 	}
 
-	// No error and user match found, return token and no error
-	return &model.Token{"ValidToken"}, nil
+	// No error, user match found with correct password - return token and no error
+	return generateToken(databaseUser), nil
 }
 
-// FIXME: Authentication should be done in HTTP header (good http protocol practice)
 func SignupUser(request *http.Request) (*model.Error) {
-	decodeError, requestUser := decodeJSONToUser(request)
+	requestUser, decodeError := decodeJSONToUser(request)
 	if decodeError != nil {
 		// Error decoding, return error
 		return decodeError
@@ -52,9 +52,9 @@ func SignupUser(request *http.Request) (*model.Error) {
 	hashedPassword, encryptionError := bcrypt.GenerateFromPassword([]byte(requestUser.Password), bcrypt.DefaultCost)
 	if encryptionError != nil {
 		// Internal error making hashed password
-		return &model.Error{500, "Internal server error creating account"}
+		return &model.Error{ StatusCode: 500, Message: "Internal server error creating account" }
 	}
-	// Set requestUser (will be put into database) password to encrypted password
+	// Set requestUser (may/may not be put into database) password to encrypted password
 	requestUser.Password = string(hashedPassword)
 
 	// Get collection Users from database
@@ -63,24 +63,14 @@ func SignupUser(request *http.Request) (*model.Error) {
 	insertError := usersCollection.Insert(requestUser)
 	if insertError != nil {
 		// Error in insertion (probably due to username already taken)
-		return &model.Error{400, "Bad request"}
+		return &model.Error{ StatusCode: 400, Message: "Bad request" }
 	}
 
 	// User successfully added to database
 	return nil
 }
 
-func generateToken() *model.Token {
-	// TODO real generation of token based on time and valid user
-	return &model.Token{"validToken" }
-}
-
-func AuthenticateToken(request *http.Request) *model.Error {
-	// TODO real authentication based on time and token generation
-	return nil
-}
-
-func decodeJSONToUser(request *http.Request) (*model.Error, *model.User) {
+func decodeJSONToUser(request *http.Request) (*model.User, *model.Error) {
 	// Decode the POST request
 	decoder := json.NewDecoder(request.Body)
 	requestUser := new(model.User)
@@ -96,9 +86,9 @@ func decodeJSONToUser(request *http.Request) (*model.Error, *model.User) {
 	validateUserError := requestUser.Validate()
 	if validateUserError != nil {
 		// JSON did not decode down to proper User struct
-		return validateUserError, nil
+		return nil, validateUserError
 	}
 
 	// Return nil (no error) and User struct decoded from JSON
-	return nil, requestUser
+	return requestUser, nil
 }

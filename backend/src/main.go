@@ -15,8 +15,10 @@ func init() {
 
 // Handles authenticating users and sends an error message or a token as the response
 func loginHandler(writer http.ResponseWriter, request *http.Request) {
+	// Only support POST requests
 	if request.Method == "POST" {
-		token, err := authentication.AuthenticateUser(request)
+		// Authenticate user and get token
+		token, err := authentication.AuthenticateUser(request, "main")
 
 		if err != nil {
 			// If there was an error, send an error message
@@ -33,51 +35,67 @@ func loginHandler(writer http.ResponseWriter, request *http.Request) {
 }
 
 func getHandler(writer http.ResponseWriter, request *http.Request) {
-	photoArray, err := data.GetPhotos(request)
-	if err != nil {
-		// If there was an error, send an error message
-		http.Error(writer, err.Message, err.StatusCode)
-	} else {
-		// Send the photo array as a response and Status OK
-		writer.WriteHeader(http.StatusOK)
-		json.NewEncoder(writer).Encode(photoArray)
+	// Only support GET requests
+	if request.Method == "GET" {
+		// Get photoarray from request
+		photoArray, err := data.GetPhotos(request)
+		if err != nil {
+			// If there was an error, send an error message
+			http.Error(writer, err.Message, err.StatusCode)
+		} else {
+			// Send the photo array as a response and Status OK
+			writer.WriteHeader(http.StatusOK)
+			json.NewEncoder(writer).Encode(photoArray)
+		}
 	}
 
 }
 
 func uploadHandler(writer http.ResponseWriter, request *http.Request) {
-	err := data.UploadPhoto(request)
-	if err != nil {
-		// Error during photo upload
-		http.Error(writer, err.Message, err.StatusCode)
-	} else {
-		// Send an OK as response since the photo has been uploaded (no error)
-		writer.WriteHeader(http.StatusOK)
-		writer.Write([]byte("Photo succesfully uploaded"))
+	// Only support POST requests
+	if request.Method == "POST" {
+		// Upload photo from request
+		err := data.UploadPhoto(request)
+		if err != nil {
+			// Error during photo upload
+			http.Error(writer, err.Message, err.StatusCode)
+		} else {
+			// Send an OK as response since the photo has been uploaded (no error)
+			writer.WriteHeader(http.StatusOK)
+			writer.Write([]byte("Photo succesfully uploaded"))
+		}
 	}
 }
 
 func removeHandler(writer http.ResponseWriter, request *http.Request) {
-	err := data.RemovePhoto(request)
-	if err != nil {
-		// Error during photo upload
-		http.Error(writer, err.Message, err.StatusCode)
-	} else {
-		// Send an OK as response since the photo has been removed (no error)
-		writer.WriteHeader(http.StatusOK)
-		writer.Write([]byte("Photo succesfully removed"))
+	// Only support POST requests
+	if request.Method == "POST" {
+		// Remove photo from request
+		err := data.RemovePhoto(request)
+		if err != nil {
+			// Error during photo upload
+			http.Error(writer, err.Message, err.StatusCode)
+		} else {
+			// Send an OK as response since the photo has been removed (no error)
+			writer.WriteHeader(http.StatusOK)
+			writer.Write([]byte("Photo succesfully removed"))
+		}
 	}
 }
 
 func signupHandler(writer http.ResponseWriter, request *http.Request) {
-	err := authentication.SignupUser(request)
-	if err != nil {
-		// Error during signup
-		http.Error(writer, err.Message, err.StatusCode)
-	} else {
-		// Send OK as response since the user signed up successfully
-		writer.WriteHeader(http.StatusOK)
-		writer.Write([]byte("User signup successful"))
+	// Only support POST requests
+	if request.Method == "POST" {
+		// Sign up user from request
+		err := authentication.SignupUser(request)
+		if err != nil {
+			// Error during signup
+			http.Error(writer, err.Message, err.StatusCode)
+		} else {
+			// Send OK as response since the user signed up successfully
+			writer.WriteHeader(http.StatusOK)
+			writer.Write([]byte("User signup successful"))
+		}
 	}
 }
 
@@ -86,6 +104,9 @@ func main() {
 	// Set up database
 	model.InitialiseDatabase("localhost")
 	defer model.Database.Close()
+
+	// Set up token map
+	authentication.InitializeTokens()
 
 	// Set up all routes
 	http.HandleFunc("/login", loginHandler)

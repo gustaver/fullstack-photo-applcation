@@ -24,6 +24,17 @@ type Token struct {
 	Token string `json:"token"`
 }
 
+// Validation for Token type, only checks that token field is NOT EMPTY in JSON to match Token struct
+func (token Token) Validate() *Error {
+	if token.Token == "" {
+		// Token has not been set
+		return &Error{400, "Invalid token format"}
+	}
+	// JSON is valid
+	return nil
+}
+
+
 type Error struct {
 	StatusCode int
 	Message string
@@ -39,9 +50,9 @@ type Photo struct {
 
 // Validation for Photo type, only checks that all fields are NOT EMPTY in JSON to match Photo struct
 func (photo Photo) Validate() *Error {
-	if photo.User == "" || photo.Date == "" || photo.Description == "" || photo.JpgBase64 == "" || photo.Title == ""{
+	if photo.User == "" || photo.Date == "" || photo.Description == "" || photo.JpgBase64 == "" || photo.Title == "" {
 		// Not all of the fields have been set
-		return &Error{400, "Invalid request format"}
+		return &Error{400, "Invalid photo format"}
 	}
 	// JSON is valid
 	return nil
