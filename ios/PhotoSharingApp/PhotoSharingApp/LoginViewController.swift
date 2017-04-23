@@ -63,7 +63,7 @@ class LoginViewController: UIViewController {
         passwordTextInput.text = ""
         portTextInput.text = ""
         ipTextInput.text = ""
-        performSegue(withIdentifier: "ShowPhotoTableView", sender: nil)
+        performSegue(withIdentifier: "ShowPhotoTableView", sender: self)
     }
 }
 

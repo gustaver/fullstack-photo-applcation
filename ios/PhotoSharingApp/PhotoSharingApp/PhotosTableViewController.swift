@@ -8,13 +8,13 @@
 
 import UIKit
 
-class PhotosTableViewController: UITableViewController {
+class PhotosTableViewController: UITableViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
+    // Image that user takes in camera or in image picker, stored to be sent to photo editing view, does not need to be set
+    private var image: UIImage!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -24,7 +24,6 @@ class PhotosTableViewController: UITableViewController {
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 
     // MARK: - Table view data source
@@ -57,7 +56,52 @@ class PhotosTableViewController: UITableViewController {
     }
     
     @IBAction func onCameraButtonPress(_ sender: Any) {
-        print("CAMERA BUTTON")
+        // Present the camera if ready
+        if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.camera){
+            let imagePicker = UIImagePickerController()
+            imagePicker.delegate = self
+            imagePicker.sourceType = UIImagePickerControllerSourceType.camera;
+            imagePicker.allowsEditing = false
+            self.present(imagePicker, animated: true, completion: nil)
+        }
+    }
+    
+    /**
+    private func imagePickerController(picker: UIImagePickerController, didFinishPickingImage image: UIImage!, editingInfo: [NSObject : AnyObject]!) {
+        // Set field image to be image chosen by user
+        self.image = image
+        performSegue(withIdentifier: "PhotoEditingView", sender: self)
+    }
+     */
+
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        // Set field image to be image taken by user from camera
+        self.image = info[UIImagePickerControllerOriginalImage] as! UIImage!
+        // Dismiss view 
+        self.dismiss(animated: true, completion: nil)
+        // Perform segue to photo editing view 
+        performSegue(withIdentifier: "PhotoEditingView", sender: self)
+    }
+    
+    /**
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingImage image: UIImage!, editingInfo: [NSObject : AnyObject]!){
+        self.image = image
+        // Dismiss view
+        self.dismiss(animated: true, completion: nil)
+        // Perform segue to photo editing view
+        performSegue(withIdentifier: "PhotoEditingView", sender: self)
+    }
+    */
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // Check the segue to be performed
+        if segue.identifier == "PhotoEditingView" {
+            // Check that next view controller can be set
+            if let photoEditingViewController = segue.destination as? PhotoEditingViewController{
+                // Set image of photo editing view to image picked by user
+                photoEditingViewController.image = self.image
+            }
+        }
     }
     
     func loadPhotos() {

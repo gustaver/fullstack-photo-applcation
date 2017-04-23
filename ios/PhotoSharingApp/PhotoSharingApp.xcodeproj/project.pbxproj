@@ -13,6 +13,7 @@
 		52C26A7CCCCDE964A6AF379E /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52C26DB14F44B8B2EC2F6073 /* Photo.swift */; };
 		E4231C511E8AE7D400FC6E9F /* PhotosTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4231C501E8AE7D400FC6E9F /* PhotosTableViewController.swift */; };
 		E4231C531E8AFA2400FC6E9F /* PhotoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4231C521E8AFA2400FC6E9F /* PhotoTableViewCell.swift */; };
+		E472EA711E8D835000B78C86 /* PhotoEditingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E472EA701E8D835000B78C86 /* PhotoEditingViewController.swift */; };
 		E4A9772D1E85728E0060A5EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4A9772C1E85728E0060A5EE /* AppDelegate.swift */; };
 		E4A9772F1E85728E0060A5EE /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4A9772E1E85728E0060A5EE /* LoginViewController.swift */; };
 		E4A977321E85728E0060A5EE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E4A977301E85728E0060A5EE /* Main.storyboard */; };
@@ -40,6 +41,7 @@
 		89F9BC057B65033D2650C52C /* Pods-PhotoSharingApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhotoSharingApp.release.xcconfig"; path = "Pods/Target Support Files/Pods-PhotoSharingApp/Pods-PhotoSharingApp.release.xcconfig"; sourceTree = "<group>"; };
 		E4231C501E8AE7D400FC6E9F /* PhotosTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotosTableViewController.swift; sourceTree = "<group>"; };
 		E4231C521E8AFA2400FC6E9F /* PhotoTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoTableViewCell.swift; sourceTree = "<group>"; };
+		E472EA701E8D835000B78C86 /* PhotoEditingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoEditingViewController.swift; sourceTree = "<group>"; };
 		E4A977291E85728E0060A5EE /* PhotoSharingApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhotoSharingApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E4A9772C1E85728E0060A5EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E4A9772E1E85728E0060A5EE /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
@@ -114,6 +116,7 @@
 				E4A9772C1E85728E0060A5EE /* AppDelegate.swift */,
 				E4A9772E1E85728E0060A5EE /* LoginViewController.swift */,
 				E4231C501E8AE7D400FC6E9F /* PhotosTableViewController.swift */,
+				E472EA701E8D835000B78C86 /* PhotoEditingViewController.swift */,
 				E4A977301E85728E0060A5EE /* Main.storyboard */,
 				E4A977331E85728E0060A5EE /* Assets.xcassets */,
 				E4A977351E85728E0060A5EE /* LaunchScreen.storyboard */,
@@ -291,6 +294,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E472EA711E8D835000B78C86 /* PhotoEditingViewController.swift in Sources */,
 				E4231C531E8AFA2400FC6E9F /* PhotoTableViewCell.swift in Sources */,
 				E4A9772F1E85728E0060A5EE /* LoginViewController.swift in Sources */,
 				E4A9772D1E85728E0060A5EE /* AppDelegate.swift in Sources */,

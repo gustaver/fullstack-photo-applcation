@@ -77,7 +77,9 @@
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
-                    <navigationItem key="navigationItem" id="VWz-Vn-0RM"/>
+                    <navigationItem key="navigationItem" id="VWz-Vn-0RM">
+                        <barButtonItem key="backBarButtonItem" title="Logout" id="341-53-iJA"/>
+                    </navigationItem>
                     <connections>
                         <outlet property="ipTextInput" destination="4W8-HW-EPf" id="IED-ag-faw"/>
                         <outlet property="passwordTextInput" destination="CWM-pm-LbF" id="rhB-fK-jXx"/>
@@ -178,7 +180,7 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Photos " id="QPo-gh-NGV">
-                        <barButtonItem key="backBarButtonItem" title="Logout" id="fzk-IV-2PU"/>
+                        <barButtonItem key="backBarButtonItem" title="Back" id="fzk-IV-2PU"/>
                         <rightBarButtonItems>
                             <barButtonItem systemItem="camera" id="Unk-lq-sBv">
                                 <connections>
@@ -188,10 +190,48 @@
                             <barButtonItem title="Gallery" id="qOf-4b-289"/>
                         </rightBarButtonItems>
                     </navigationItem>
+                    <connections>
+                        <segue destination="tEJ-Ry-XiL" kind="show" identifier="PhotoEditingView" id="Pec-ZA-aVq"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="18D-iZ-rR1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1061.5999999999999" y="130.88455772113943"/>
+        </scene>
+        <!--Photo Editing View Controller-->
+        <scene sceneID="lZD-f3-xqI">
+            <objects>
+                <viewController id="tEJ-Ry-XiL" customClass="PhotoEditingViewController" customModule="PhotoSharingApp" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="ewe-cT-ZT4"/>
+                        <viewControllerLayoutGuide type="bottom" id="aNg-rr-l2H"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="43l-dX-a5w">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QLb-dC-XPh">
+                                <rect key="frame" x="67" y="269" width="240" height="128"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yA8-56-Et0">
+                                <rect key="frame" x="135" y="535" width="104" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Upload Photo"/>
+                                <connections>
+                                    <action selector="onUploadPhotoPress:" destination="tEJ-Ry-XiL" eventType="touchUpInside" id="4wu-5D-XBM"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <connections>
+                        <outlet property="imageView" destination="QLb-dC-XPh" id="tdU-cC-E8B"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="V8F-Dd-yZE" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2020" y="130.88455772113943"/>
         </scene>
     </scenes>
 </document>
