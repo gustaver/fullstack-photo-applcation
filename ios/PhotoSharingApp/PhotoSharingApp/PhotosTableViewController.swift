@@ -58,32 +58,24 @@ class PhotosTableViewController: UITableViewController, UIImagePickerControllerD
     @IBAction func onCameraButtonPress(_ sender: Any) {
         // Present the camera if ready
         if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.camera){
+            let cameraView = UIImagePickerController()
+            cameraView.delegate = self
+            cameraView.sourceType = UIImagePickerControllerSourceType.camera;
+            cameraView.allowsEditing = false
+            self.present(cameraView, animated: true, completion: nil)
+        }
+    }
+    
+    @IBAction func onGalleryButtonPress(_ sender: Any) {
+        if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.photoLibrary){
             let imagePicker = UIImagePickerController()
             imagePicker.delegate = self
-            imagePicker.sourceType = UIImagePickerControllerSourceType.camera;
-            imagePicker.allowsEditing = false
+            imagePicker.sourceType = UIImagePickerControllerSourceType.photoLibrary;
+            imagePicker.allowsEditing = true
             self.present(imagePicker, animated: true, completion: nil)
         }
     }
     
-    /**
-    private func imagePickerController(picker: UIImagePickerController, didFinishPickingImage image: UIImage!, editingInfo: [NSObject : AnyObject]!) {
-        // Set field image to be image chosen by user
-        self.image = image
-        performSegue(withIdentifier: "PhotoEditingView", sender: self)
-    }
-     */
-
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        // Set field image to be image taken by user from camera
-        self.image = info[UIImagePickerControllerOriginalImage] as! UIImage!
-        // Dismiss view 
-        self.dismiss(animated: true, completion: nil)
-        // Perform segue to photo editing view 
-        performSegue(withIdentifier: "PhotoEditingView", sender: self)
-    }
-    
-    /**
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingImage image: UIImage!, editingInfo: [NSObject : AnyObject]!){
         self.image = image
         // Dismiss view
@@ -91,7 +83,6 @@ class PhotosTableViewController: UITableViewController, UIImagePickerControllerD
         // Perform segue to photo editing view
         performSegue(withIdentifier: "PhotoEditingView", sender: self)
     }
-    */
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Check the segue to be performed

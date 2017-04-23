@@ -187,7 +187,11 @@
                                     <action selector="onCameraButtonPress:" destination="eaM-BV-K4s" id="G8f-Re-aRh"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem title="Gallery" id="qOf-4b-289"/>
+                            <barButtonItem title="Gallery" id="qOf-4b-289">
+                                <connections>
+                                    <action selector="onGalleryButtonPress:" destination="eaM-BV-K4s" id="zL0-u9-qNB"/>
+                                </connections>
+                            </barButtonItem>
                         </rightBarButtonItems>
                     </navigationItem>
                     <connections>
