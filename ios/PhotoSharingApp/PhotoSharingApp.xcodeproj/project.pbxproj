@@ -12,7 +12,7 @@
 		52C26A3BEC38E7FFC30CA93D /* PhotoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52C26889060D76CADC4FE31A /* PhotoManager.swift */; };
 		52C26A7CCCCDE964A6AF379E /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52C26DB14F44B8B2EC2F6073 /* Photo.swift */; };
 		E4A9772D1E85728E0060A5EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4A9772C1E85728E0060A5EE /* AppDelegate.swift */; };
-		E4A9772F1E85728E0060A5EE /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4A9772E1E85728E0060A5EE /* ViewController.swift */; };
+		E4A9772F1E85728E0060A5EE /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4A9772E1E85728E0060A5EE /* LoginViewController.swift */; };
 		E4A977321E85728E0060A5EE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E4A977301E85728E0060A5EE /* Main.storyboard */; };
 		E4A977341E85728E0060A5EE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E4A977331E85728E0060A5EE /* Assets.xcassets */; };
 		E4A977371E85728E0060A5EE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E4A977351E85728E0060A5EE /* LaunchScreen.storyboard */; };
@@ -38,7 +38,7 @@
 		89F9BC057B65033D2650C52C /* Pods-PhotoSharingApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhotoSharingApp.release.xcconfig"; path = "Pods/Target Support Files/Pods-PhotoSharingApp/Pods-PhotoSharingApp.release.xcconfig"; sourceTree = "<group>"; };
 		E4A977291E85728E0060A5EE /* PhotoSharingApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhotoSharingApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E4A9772C1E85728E0060A5EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		E4A9772E1E85728E0060A5EE /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		E4A9772E1E85728E0060A5EE /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		E4A977311E85728E0060A5EE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		E4A977331E85728E0060A5EE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E4A977361E85728E0060A5EE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -108,7 +108,7 @@
 			isa = PBXGroup;
 			children = (
 				E4A9772C1E85728E0060A5EE /* AppDelegate.swift */,
-				E4A9772E1E85728E0060A5EE /* ViewController.swift */,
+				E4A9772E1E85728E0060A5EE /* LoginViewController.swift */,
 				E4A977301E85728E0060A5EE /* Main.storyboard */,
 				E4A977331E85728E0060A5EE /* Assets.xcassets */,
 				E4A977351E85728E0060A5EE /* LaunchScreen.storyboard */,
@@ -285,7 +285,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E4A9772F1E85728E0060A5EE /* ViewController.swift in Sources */,
+				E4A9772F1E85728E0060A5EE /* LoginViewController.swift in Sources */,
 				E4A9772D1E85728E0060A5EE /* AppDelegate.swift in Sources */,
 				52C26A7CCCCDE964A6AF379E /* Photo.swift in Sources */,
 				52C26A3BEC38E7FFC30CA93D /* PhotoManager.swift in Sources */,
@@ -501,6 +501,7 @@
 				E4A977481E85728E0060A5EE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		E4A977491E85728E0060A5EE /* Build configuration list for PBXNativeTarget "PhotoSharingAppTests" */ = {
 			isa = XCConfigurationList;
@@ -509,6 +510,7 @@
 				E4A9774B1E85728E0060A5EE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
