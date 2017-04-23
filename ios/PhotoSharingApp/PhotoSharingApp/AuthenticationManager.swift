@@ -34,6 +34,7 @@ class AuthenticationManager {
 
         // Create url from parameters set in fields (by user from LoginView text fields)
         let url = baseUrl + ip + ":" + port + "/login"
+        
         // Make request
         Alamofire.request(url, method: .post, parameters: parameters, encoding: JSONEncoding.default).validate().responseJSON { response in
             if response.response === nil {

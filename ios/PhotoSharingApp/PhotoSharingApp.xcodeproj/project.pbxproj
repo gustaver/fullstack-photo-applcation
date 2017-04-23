@@ -11,6 +11,7 @@
 		52C2610B468AF0FDB55C799B /* AuthenticationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52C26908E496A493262C00BD /* AuthenticationManager.swift */; };
 		52C26A3BEC38E7FFC30CA93D /* PhotoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52C26889060D76CADC4FE31A /* PhotoManager.swift */; };
 		52C26A7CCCCDE964A6AF379E /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52C26DB14F44B8B2EC2F6073 /* Photo.swift */; };
+		E4231C511E8AE7D400FC6E9F /* PhotosTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4231C501E8AE7D400FC6E9F /* PhotosTableViewController.swift */; };
 		E4A9772D1E85728E0060A5EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4A9772C1E85728E0060A5EE /* AppDelegate.swift */; };
 		E4A9772F1E85728E0060A5EE /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4A9772E1E85728E0060A5EE /* LoginViewController.swift */; };
 		E4A977321E85728E0060A5EE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E4A977301E85728E0060A5EE /* Main.storyboard */; };
@@ -36,6 +37,7 @@
 		6B9584679ABEFFF1350F0DE9 /* Pods-PhotoSharingApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhotoSharingApp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PhotoSharingApp/Pods-PhotoSharingApp.debug.xcconfig"; sourceTree = "<group>"; };
 		7DEE7AF429D49E8A9EF00490 /* Pods_PhotoSharingApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PhotoSharingApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		89F9BC057B65033D2650C52C /* Pods-PhotoSharingApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhotoSharingApp.release.xcconfig"; path = "Pods/Target Support Files/Pods-PhotoSharingApp/Pods-PhotoSharingApp.release.xcconfig"; sourceTree = "<group>"; };
+		E4231C501E8AE7D400FC6E9F /* PhotosTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotosTableViewController.swift; sourceTree = "<group>"; };
 		E4A977291E85728E0060A5EE /* PhotoSharingApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhotoSharingApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E4A9772C1E85728E0060A5EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E4A9772E1E85728E0060A5EE /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
@@ -109,6 +111,7 @@
 			children = (
 				E4A9772C1E85728E0060A5EE /* AppDelegate.swift */,
 				E4A9772E1E85728E0060A5EE /* LoginViewController.swift */,
+				E4231C501E8AE7D400FC6E9F /* PhotosTableViewController.swift */,
 				E4A977301E85728E0060A5EE /* Main.storyboard */,
 				E4A977331E85728E0060A5EE /* Assets.xcassets */,
 				E4A977351E85728E0060A5EE /* LaunchScreen.storyboard */,
@@ -287,6 +290,7 @@
 			files = (
 				E4A9772F1E85728E0060A5EE /* LoginViewController.swift in Sources */,
 				E4A9772D1E85728E0060A5EE /* AppDelegate.swift in Sources */,
+				E4231C511E8AE7D400FC6E9F /* PhotosTableViewController.swift in Sources */,
 				52C26A7CCCCDE964A6AF379E /* Photo.swift in Sources */,
 				52C26A3BEC38E7FFC30CA93D /* PhotoManager.swift in Sources */,
 				52C2610B468AF0FDB55C799B /* AuthenticationManager.swift in Sources */,

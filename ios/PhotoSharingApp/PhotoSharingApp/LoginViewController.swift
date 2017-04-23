@@ -18,13 +18,14 @@ class LoginViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // For testing purposes (for now) go straight to login, TODO: REMOVE THIS
-        self.onLoginSuccesful()
+        usernameTextInput.text = "gustave"
+        passwordTextInput.text = "12345"
+        portTextInput.text = "8080"
+        ipTextInput.text = "192.168.1.3"
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 
     @IBAction func onPressLogin(_ sender: Any) {
