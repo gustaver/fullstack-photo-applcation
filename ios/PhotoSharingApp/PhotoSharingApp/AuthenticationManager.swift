@@ -29,6 +29,8 @@ class AuthenticationManager {
     }
 
     func loginUser(username: String, password: String, completeCallback: @escaping (_ title: String, _ message: String, _ succesful: Bool) -> Void) {
+        // Clear Token for each login 
+        self.Token = "" 
         // Create JSON body of username and password
         let parameters: Parameters = ["username": username, "password": password]
 

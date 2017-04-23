@@ -18,9 +18,8 @@ class PhotosTableViewController: UITableViewController {
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        // List of photos should reload every time the view appears 
-        // Display activity indicator
-        PhotoManager.sharedInstance.getPhotos()
+        // Load phtoos. List of photos should reload every time the view appears
+        self.loadPhotos()
     }
 
     override func didReceiveMemoryWarning() {
@@ -31,13 +30,60 @@ class PhotosTableViewController: UITableViewController {
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 0
+        // Only one section for photos
+        return 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return 0
+        return PhotoManager.sharedInstance.PhotoArray.count
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let photoCell = tableView.dequeueReusableCell(withIdentifier: "PhotoCell") as! PhotoTableViewCell
+        // Get current photo for easier reference 
+        let photo = PhotoManager.sharedInstance.PhotoArray[indexPath.row]
+        // Get base64 string of photo using current row as index for array
+        let base64String = photo.JpgBase64
+        // Decode Base64 string to image (if possible) and then set image
+        if let decodedData = Data(base64Encoded: base64String!) {
+            let image = UIImage(data: decodedData)
+            photoCell.imageInCell.image = image
+        }
+        // Set remaining labels of photoCell
+        photoCell.titleLabel.text = photo.Title
+        photoCell.dateLabel.text = photo.Date
+        photoCell.descriptionLabel.text = photo.Description
+        return photoCell
+    }
+    
+    @IBAction func onCameraButtonPress(_ sender: Any) {
+        print("CAMERA BUTTON")
+    }
+    
+    func loadPhotos() {
+        // Display activity indicator
+        
+        // Create callback function to be called when request finishes
+        func callbackPhotoRequest(succes: Bool) {
+            if succes {
+                // Request was succesful, load photos into tableview 
+                self.onPhotosSuccessfullyLoaded()
+            } else {
+                // Request was unsuccesful, display error message 
+                self.displayAlert(title: "Could not load photos", alertText: "Please logout and try again", buttonText: "Ok")
+            }
+        }
+        PhotoManager.sharedInstance.getPhotos(completeCallback: callbackPhotoRequest)
+    }
+    
+    func onPhotosSuccessfullyLoaded() {
+        tableView.reloadData()
+    }
+    
+    func displayAlert(title: String, alertText: String, buttonText: String) {
+        let alert = UIAlertController(title: title, message: alertText, preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: buttonText, style: UIAlertActionStyle.default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
 
     /*
