@@ -6,6 +6,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -102,7 +103,7 @@
                                 <rect key="frame" x="0.0" y="28" width="375" height="250"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="7Sw-Dk-1qg" id="5sP-Bd-sOu">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="249"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="249.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="HHY-qa-6HH">
@@ -120,7 +121,7 @@
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Description" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bLB-cA-qMr">
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Description" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bLB-cA-qMr">
                                                         <rect key="frame" x="8" y="35" width="359" height="40"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="40" id="1r1-Ps-j1Y"/>
@@ -178,11 +179,14 @@
                     </tableView>
                     <navigationItem key="navigationItem" title="Photos " id="QPo-gh-NGV">
                         <barButtonItem key="backBarButtonItem" title="Logout" id="fzk-IV-2PU"/>
-                        <barButtonItem key="rightBarButtonItem" systemItem="camera" id="Unk-lq-sBv">
-                            <connections>
-                                <action selector="onCameraButtonPress:" destination="eaM-BV-K4s" id="G8f-Re-aRh"/>
-                            </connections>
-                        </barButtonItem>
+                        <rightBarButtonItems>
+                            <barButtonItem systemItem="camera" id="Unk-lq-sBv">
+                                <connections>
+                                    <action selector="onCameraButtonPress:" destination="eaM-BV-K4s" id="G8f-Re-aRh"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem title="Gallery" id="qOf-4b-289"/>
+                        </rightBarButtonItems>
                     </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="18D-iZ-rR1" userLabel="First Responder" sceneMemberID="firstResponder"/>
