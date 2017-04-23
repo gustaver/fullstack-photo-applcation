@@ -16,6 +16,7 @@ class PhotoManager {
     }
 
     func getPhotos() {
+        
     }
 
     func uploadPhoto() {

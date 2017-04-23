@@ -18,7 +18,8 @@ class LoginViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        // For testing purposes (for now) go straight to login, TODO: REMOVE THIS
+        self.onLoginSuccesful()
     }
 
     override func didReceiveMemoryWarning() {
@@ -34,8 +35,7 @@ class LoginViewController: UIViewController {
             AuthenticationManager.sharedInstance.ip = ipTextInput.text!
             // Callback function to be sent into authentication request
             func callbackRequestComplete(title: String, message: String, succesful: Bool) {
-                // Display alerty showing message from request
-                self.displayAlert(title: title, alertText: message, buttonText: "Ok")
+                //TODO: Consider displaying an alert of succesful login here
                 // Check if login was succesful 
                 if succesful {
                     self.onLoginSuccesful()
@@ -45,7 +45,7 @@ class LoginViewController: UIViewController {
             AuthenticationManager.sharedInstance.loginUser(username: usernameTextInput.text!, password: passwordTextInput.text!, completeCallback: callbackRequestComplete)
         }
         else {
-            // One of the fields didn't have any text, display alert
+            // One of the fields didn't have any text, display alert, no callback
             self.displayAlert(title: "Invalid login", alertText: "All login parameters must be specified", buttonText: "Ok")
         }
     }
@@ -57,7 +57,12 @@ class LoginViewController: UIViewController {
     }
     
     func onLoginSuccesful() {
-        
+        // Clear all text fields 
+        usernameTextInput.text = ""
+        passwordTextInput.text = ""
+        portTextInput.text = ""
+        ipTextInput.text = ""
+        performSegue(withIdentifier: "ShowPhotoTableView", sender: nil)
     }
 }
 
