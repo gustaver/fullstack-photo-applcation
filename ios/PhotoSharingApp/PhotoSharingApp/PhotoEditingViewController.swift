@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PhotoEditingViewController: UIViewController {
+class PhotoEditingViewController: UIViewController, UITextFieldDelegate {
     
     // Image to be set from previous view controller (PhotoTableView)
     var image: UIImage!
@@ -31,9 +31,14 @@ class PhotoEditingViewController: UIViewController {
         // Create photo object from image 
         self.createPhoto()
         
-        // TODO: For testing purposes, text automatically set here 
-        titleTextField.text = "Title"
-        descriptionTextField.text = "Description"
+        // Set delegates of all text fields 
+        self.titleTextField.delegate = self
+        self.descriptionTextField.delegate = self
+        
+        // Recognize tap on screen to dismiss keyboard
+        let tap = UITapGestureRecognizer(target: self.view, action: #selector(UIView.endEditing(_:)))
+        tap.cancelsTouchesInView = false
+        self.view.addGestureRecognizer(tap)
     }
 
     override func didReceiveMemoryWarning() {
@@ -69,8 +74,33 @@ class PhotoEditingViewController: UIViewController {
         }
     }
     
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        // Check if title or description text field 
+        if textField.returnKeyType == UIReturnKeyType.next {
+            // Check for next responder
+            if let nextField = textField.superview?.viewWithTag(textField.tag + 1) as? UITextField {
+                nextField.becomeFirstResponder()
+            } else {
+                // Not found, so remove keyboard.
+                textField.resignFirstResponder()
+            }
+        } else {
+            // Description key, pressing done means upload
+            // Dismiss keyboard 
+            textField.resignFirstResponder()
+            self.onUploadPhotoPress(self)
+        }
+        return false
+    }
+    
     func onUploadSuccesful() {
-        displayAlert(title: "Upload succesful", alertText: "Check out your new photo", buttonText: "Ok")
+        // Callback for when OK is pressed on alert, pop back to photo table view
+        func onPressOk(action: UIAlertAction) {
+            navigationController?.popViewController(animated: true)
+        }
+        let alert = UIAlertController(title: "Upload successful", message: "Let's checkout your new photo!", preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "Go!", style: UIAlertActionStyle.default, handler: onPressOk))
+        self.present(alert, animated: true, completion: nil)
     }
     
     func displayAlert(title: String, alertText: String, buttonText: String) {

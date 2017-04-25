@@ -60,7 +60,7 @@ func signupHandler(writer http.ResponseWriter, request *http.Request) {
 // Handles requests to get the photos of a user
 func getHandler(writer http.ResponseWriter, request *http.Request) {
 	// Only support GET requests
-	if request.Method == "GET" {
+	if request.Method == "POST" {
 		// Get photo array from request
 		photoArray, err := data.GetPhotos(request, model.MainDatabase)
 		if err != nil {
@@ -74,9 +74,8 @@ func getHandler(writer http.ResponseWriter, request *http.Request) {
 		}
 	} else {
 		// Request was not a POST
-		http.Error(writer, "API route only supports method GET", 400)
+		http.Error(writer, "API route only supports method POST", 400)
 	}
-
 }
 
 // Handles requests to upload photos

@@ -21,7 +21,7 @@ class PhotoManager {
         // Create url for request 
         let url = AuthenticationManager.sharedInstance.baseUrl + AuthenticationManager.sharedInstance.ip + ":" + AuthenticationManager.sharedInstance.port + "/get"
         // Make get request
-        Alamofire.request(url, method: .get, headers: headers).responseJSON { response in
+        Alamofire.request(url, method: .post, headers: headers).responseJSON { response in
             if response.response === nil {
                 // Invalid url, request unsuccesful
                 completeCallback(false)

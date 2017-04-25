@@ -121,15 +121,17 @@ class PhotosTableViewController: UITableViewController, UIImagePickerControllerD
     }
     
     func loadPhotos() {
-        // Display activity indicator and disable view perhaps
-        
         // Create callback function to be called when request finishes
         func callbackPhotoRequest(success: Bool) {
             if success {
-                // Request was succesful, load photos into tableview 
+                // Request was succesful, load photos into tableview
                 self.onPhotosSuccessfullyLoaded()
+                if PhotoManager.sharedInstance.PhotoArray.isEmpty {
+                    // No photos, display message
+                    self.displayAlert(title: "Whoops!", alertText: "Looks like you don't have any photos, go ahead and add some!", buttonText: "Ok")
+                }
             } else {
-                // Request was unsuccesful, display error message 
+                // Request was unsuccesful, display error message
                 self.displayAlert(title: "Could not load photos", alertText: "Please logout and try again", buttonText: "Ok")
             }
         }

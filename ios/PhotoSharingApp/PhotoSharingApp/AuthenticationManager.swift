@@ -44,33 +44,64 @@ class AuthenticationManager {
         let url = baseUrl + ip + ":" + port + "/login"
         
         // Make request
-        Alamofire.request(url, method: .post, parameters: parameters, encoding: JSONEncoding.default).validate().responseJSON { response in
-            if response.response === nil {
+        Alamofire.request(url, method: .post, parameters: parameters, encoding: JSONEncoding.default).response { response in
+            let responseCode = response.response?.statusCode
+            if responseCode == nil {
                 // Invalid url 
                 completeCallback("Login failed", "Invalid IP or port, try again", false)
-            }
-            switch response.result {
-            case .success(let value):
-                let json = JSON(value)
-                // Request was succesful, set values
-                self.Token = json["token"].stringValue
-                self.username = username
-                // Use callback closure to send back response
-                completeCallback("Login Succesful", "Welcome!", true)
-            case .failure:
-                let statusCode = response.response?.statusCode
-                if statusCode == 401 {
-                    // Unathorized 
+            } else {
+                if responseCode == 200 {
+                    // Check decode response data to JSON
+                    let json = JSON(response.data!)
+                    if json == JSON.null {
+                        // Error decoding JSON response 
+                        completeCallback("Login failed", "Bad request", false)
+                    } else {
+                        // Request was succesful, set values
+                        self.Token = json["token"].stringValue
+                        self.username = username
+                        // Use callback closure to send back response
+                        completeCallback("Login Succesful", "Welcome!", true)
+                    }
+                } else if responseCode == 401 {
+                    // Unathorized
                     completeCallback("Login failed", "Invalid login credentials, please try again", false)
-                }
-                else {
-                    // Bad request 
+                } else {
+                    // Bad request
                     completeCallback("Login failed", "Invalid login credentials, please try again", false)
                 }
             }
         }
     }
 
-    func signupUser(username: String) {
+    func signupUser(username: String, password: String, completeCallback: @escaping (_ title: String, _ message: String, _ succesful: Bool) -> Void) {
+        // Clear username for each signup 
+        self.username = ""
+        
+        // Create JSON body of username and password
+        let parameters: Parameters = ["username": username, "password": password]
+        
+        // Create url from parameters set in fields (by user from LoginView text fields)
+        let url = baseUrl + ip + ":" + port + "/signup"
+        
+        // Make request
+        Alamofire.request(url, method: .post, parameters: parameters, encoding: JSONEncoding.default).response { response in
+            let responseCode = response.response?.statusCode
+            if responseCode == nil {
+                // Invalid url
+                completeCallback("Singup failed", "Invalid IP or port, try again", false)
+            } else {
+                if responseCode == 200 {
+                    // Signup successful 
+                    completeCallback("Signup successful", "Welcome to PhotoSharing! Go ahead and login!", true)
+                } else if responseCode == 401 {
+                    // Unathorized
+                    completeCallback("Signup failed", "Invalid signup credentials, please try again", false)
+                } else {
+                    // Bad request
+                    completeCallback("Signup failed", "Invalid signup credentials, please try again", false)
+                }
+            }
+        }
     }
 }
