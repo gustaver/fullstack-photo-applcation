@@ -5,6 +5,7 @@
 
 import Foundation
 import SwiftyJSON
+import Alamofire
 
 class Photo: NSObject {
 
@@ -14,11 +15,16 @@ class Photo: NSObject {
     var Date: String?
     var User: String?
 
-    init(data: JSON) {
+    func initialiseFromJSON(data: JSON) {
         self.JpgBase64 = data["jpgbase64"].stringValue
         self.Title = data["title"].stringValue
         self.Description = data["description"].stringValue
         self.Date = data["date"].stringValue
         self.User = data["user"].stringValue
+    }
+    
+    func toParameters() -> Parameters {
+        let photoEncoded: Parameters = ["jpgBase64": self.JpgBase64, "title": self.Title, "description": self.Description, "date": self.Date, "user": self.User]
+        return photoEncoded
     }
 }

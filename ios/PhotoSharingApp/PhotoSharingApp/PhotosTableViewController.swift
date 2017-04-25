@@ -9,7 +9,7 @@
 import UIKit
 
 class PhotosTableViewController: UITableViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-
+    
     // Image that user takes in camera or in image picker, stored to be sent to photo editing view, does not need to be set
     private var image: UIImage!
     
@@ -17,7 +17,7 @@ class PhotosTableViewController: UITableViewController, UIImagePickerControllerD
         super.viewDidLoad()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         // Load phtoos. List of photos should reload every time the view appears
         self.loadPhotos()
     }
@@ -38,9 +38,11 @@ class PhotosTableViewController: UITableViewController, UIImagePickerControllerD
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        // Create cell
         let photoCell = tableView.dequeueReusableCell(withIdentifier: "PhotoCell") as! PhotoTableViewCell
         // Get current photo for easier reference 
         let photo = PhotoManager.sharedInstance.PhotoArray[indexPath.row]
+        
         // Get base64 string of photo using current row as index for array
         let base64String = photo.JpgBase64
         // Decode Base64 string to image (if possible) and then set image
@@ -48,6 +50,7 @@ class PhotosTableViewController: UITableViewController, UIImagePickerControllerD
             let image = UIImage(data: decodedData)
             photoCell.imageInCell.image = image
         }
+        
         // Set remaining labels of photoCell
         photoCell.titleLabel.text = photo.Title
         photoCell.dateLabel.text = photo.Date
@@ -96,7 +99,7 @@ class PhotosTableViewController: UITableViewController, UIImagePickerControllerD
     }
     
     func loadPhotos() {
-        // Display activity indicator
+        // Display activity indicator and disable view perhaps 
         
         // Create callback function to be called when request finishes
         func callbackPhotoRequest(succes: Bool) {
@@ -120,16 +123,6 @@ class PhotosTableViewController: UITableViewController, UIImagePickerControllerD
         alert.addAction(UIAlertAction(title: buttonText, style: UIAlertActionStyle.default, handler: nil))
         self.present(alert, animated: true, completion: nil)
     }
-
-    /*
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-
-        // Configure the cell...
-
-        return cell
-    }
-    */
 
     /*
     // Override to support conditional editing of the table view.
@@ -165,15 +158,4 @@ class PhotosTableViewController: UITableViewController, UIImagePickerControllerD
         return true
     }
     */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

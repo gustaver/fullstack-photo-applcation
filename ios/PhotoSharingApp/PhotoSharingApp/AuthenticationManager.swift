@@ -19,6 +19,9 @@ class AuthenticationManager {
 
     // Token for future API calls after login
     var Token: String
+    
+    // Currently logged in user 
+    var username: String
 
     init() {
         // Assumed initial state, user needs to provide port and IP
@@ -26,11 +29,14 @@ class AuthenticationManager {
         self.Token = ""
         self.ip = ""
         self.port = ""
+        self.username = ""
     }
 
     func loginUser(username: String, password: String, completeCallback: @escaping (_ title: String, _ message: String, _ succesful: Bool) -> Void) {
-        // Clear Token for each login 
-        self.Token = "" 
+        // Clear Token and username for each login
+        self.Token = ""
+        self.username = ""
+        
         // Create JSON body of username and password
         let parameters: Parameters = ["username": username, "password": password]
 
@@ -46,7 +52,9 @@ class AuthenticationManager {
             switch response.result {
             case .success(let value):
                 let json = JSON(value)
+                // Request was succesful, set values
                 self.Token = json["token"].stringValue
+                self.username = username
                 // Use callback closure to send back response
                 completeCallback("Login Succesful", "Welcome!", true)
             case .failure:
