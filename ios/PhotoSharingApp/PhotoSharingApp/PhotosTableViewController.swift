@@ -10,6 +10,9 @@ import UIKit
 
 class PhotosTableViewController: UITableViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
+    // Activity indicator to show when loading photos
+    var activityIndicator: UIActivityIndicatorView = UIActivityIndicatorView()
+    
     // Image that user takes in camera or in image picker, stored to be sent to photo editing view, does not need to be set
     private var image: UIImage!
     
@@ -18,6 +21,13 @@ class PhotosTableViewController: UITableViewController, UIImagePickerControllerD
         
         // Setup allowing to delete rows in photo table view 
         tableView.allowsSelectionDuringEditing = true
+        
+        // Setup for Activity Indicator 
+        activityIndicator.center = self.view.center
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.whiteLarge
+        activityIndicator.color = UIColor.darkGray
+        view.addSubview(activityIndicator)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -121,8 +131,15 @@ class PhotosTableViewController: UITableViewController, UIImagePickerControllerD
     }
     
     func loadPhotos() {
+        // TODO: Consider disabling user interaction ? 
+        // Show loading and turn off interaction with application
+        activityIndicator.startAnimating()
+        
         // Create callback function to be called when request finishes
         func callbackPhotoRequest(success: Bool) {
+            // Stop loading and turn on interaction with application 
+            activityIndicator.stopAnimating()
+            
             if success {
                 // Request was succesful, load photos into tableview
                 self.onPhotosSuccessfullyLoaded()
