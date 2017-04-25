@@ -24,7 +24,7 @@ class Photo: NSObject {
     }
     
     func toParameters() -> Parameters {
-        let photoEncoded: Parameters = ["jpgBase64": self.JpgBase64, "title": self.Title, "description": self.Description, "date": self.Date, "user": self.User]
+        let photoEncoded: Parameters = ["jpgBase64": self.JpgBase64!, "title": self.Title!, "description": self.Description!, "date": self.Date!, "user": self.User!]
         return photoEncoded
     }
 }

@@ -115,7 +115,7 @@ class PhotosTableViewController: UITableViewController, UIImagePickerControllerD
     }
     
     func onPhotosSuccessfullyLoaded() {
-        tableView.reloadData()
+        self.tableView.reloadData()
     }
     
     func displayAlert(title: String, alertText: String, buttonText: String) {
