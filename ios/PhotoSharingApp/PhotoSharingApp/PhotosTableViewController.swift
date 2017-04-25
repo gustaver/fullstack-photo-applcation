@@ -99,7 +99,7 @@ class PhotosTableViewController: UITableViewController, UIImagePickerControllerD
     }
     
     func loadPhotos() {
-        // Display activity indicator and disable view perhaps 
+        // Display activity indicator and disable view perhaps
         
         // Create callback function to be called when request finishes
         func callbackPhotoRequest(succes: Bool) {
