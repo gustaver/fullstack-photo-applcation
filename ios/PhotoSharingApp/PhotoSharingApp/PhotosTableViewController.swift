@@ -15,6 +15,9 @@ class PhotosTableViewController: UITableViewController, UIImagePickerControllerD
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Setup allowing to delete rows in photo table view 
+        tableView.allowsSelectionDuringEditing = true
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -87,6 +90,25 @@ class PhotosTableViewController: UITableViewController, UIImagePickerControllerD
         performSegue(withIdentifier: "PhotoEditingView", sender: self)
     }
     
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        // Create callback for reqest 
+        func callbackPhotoRequest (title: String, message: String, success: Bool) {
+            if success {
+                // Request was succesful, photo has been removed from array, display message and reload tableView
+                self.displayAlert(title: title, alertText: message, buttonText: "Ok")
+                self.onPhotosSuccessfullyLoaded()
+            } else {
+                // Request was unsuccesful, display error message from request callback
+                self.displayAlert(title: title, alertText: message, buttonText: "Ok")
+            }
+        }
+        PhotoManager.sharedInstance.removePhoto(completeCallback: callbackPhotoRequest, index: indexPath.row)
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Check the segue to be performed
         if segue.identifier == "PhotoEditingView" {
@@ -102,8 +124,8 @@ class PhotosTableViewController: UITableViewController, UIImagePickerControllerD
         // Display activity indicator and disable view perhaps
         
         // Create callback function to be called when request finishes
-        func callbackPhotoRequest(succes: Bool) {
-            if succes {
+        func callbackPhotoRequest(success: Bool) {
+            if success {
                 // Request was succesful, load photos into tableview 
                 self.onPhotosSuccessfullyLoaded()
             } else {
@@ -115,7 +137,9 @@ class PhotosTableViewController: UITableViewController, UIImagePickerControllerD
     }
     
     func onPhotosSuccessfullyLoaded() {
-        self.tableView.reloadData()
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
     }
     
     func displayAlert(title: String, alertText: String, buttonText: String) {
@@ -123,39 +147,4 @@ class PhotosTableViewController: UITableViewController, UIImagePickerControllerD
         alert.addAction(UIAlertAction(title: buttonText, style: UIAlertActionStyle.default, handler: nil))
         self.present(alert, animated: true, completion: nil)
     }
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
 }

@@ -65,7 +65,7 @@ class PhotoEditingViewController: UIViewController {
         }
         else {
             // One of the fields didn't have any text, display alert, no callback
-            self.displayAlert(title: "Invalid login", alertText: "All login parameters must be specified", buttonText: "Ok")
+            self.displayAlert(title: "Invalid request", alertText: "All photo parameters must be specified", buttonText: "Ok")
         }
     }
     

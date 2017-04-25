@@ -21,7 +21,7 @@ class LoginViewController: UIViewController {
         usernameTextInput.text = "gustave"
         passwordTextInput.text = "12345"
         portTextInput.text = "8080"
-        ipTextInput.text = "130.229.162.46"
+        ipTextInput.text = "192.168.1.2"
     }
 
     override func didReceiveMemoryWarning() {

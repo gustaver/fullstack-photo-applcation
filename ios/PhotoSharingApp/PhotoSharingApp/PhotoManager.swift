@@ -72,6 +72,30 @@ class PhotoManager {
         }
     }
 
-    func removePhoto() {
+    func removePhoto(completeCallback: @escaping (_ title: String, _ message: String, _ succesful: Bool) -> Void, index: Int) {
+        // Create headers with Token
+        let headers: HTTPHeaders = ["Token": AuthenticationManager.sharedInstance.Token]
+        // Create url for request
+        let url = AuthenticationManager.sharedInstance.baseUrl + AuthenticationManager.sharedInstance.ip + ":" + AuthenticationManager.sharedInstance.port + "/remove"
+        // Get the photo to be removed 
+        let photo: Photo = self.PhotoArray[index]
+        let parameters: Parameters = photo.toParameters()
+        
+        // Make request using above information
+        Alamofire.request(url, method: .post, parameters: parameters, encoding: JSONEncoding.default,  headers: headers).validate().responseJSON { response in
+            // FIXME: This entire request/response process needs to be fixed
+            if response.response === nil {
+                // Invalid url
+                completeCallback("Remove failed", "Invalid IP or port, try again", false)
+            }
+            let statusCode = response.response?.statusCode
+            if statusCode == 200 {
+                //Remove photo from PhotoArray, no need to reload all photos 
+                self.PhotoArray.remove(at: index)
+                completeCallback("Remove succesful", "Your photo has been succesfully removed", true)
+            } else {
+                completeCallback("Remove failed", "Invalid removal request, try again", false)
+            }
+        }
     }
 }
