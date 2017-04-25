@@ -59,7 +59,7 @@ class PhotosTableViewController: UITableViewController, UIImagePickerControllerD
         // Get base64 string of photo using current row as index for array
         let base64String = photo.JpgBase64
         // Decode Base64 string to image (if possible) and then set image
-        if let decodedData = Data(base64Encoded: base64String!) {
+        if let decodedData = Data(base64Encoded: base64String!, options: Data.Base64DecodingOptions.ignoreUnknownCharacters) {
             let image = UIImage(data: decodedData)
             photoCell.imageInCell.image = image
         }
