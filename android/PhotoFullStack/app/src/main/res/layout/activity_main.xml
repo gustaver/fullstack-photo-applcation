@@ -102,6 +102,7 @@
             android:id="@+id/register_button"
             android:layout_width="0dp"
             android:layout_height="48dp"
+            android:onClick="register"
             android:text="@string/register_button"
             app:layout_constraintBottom_toTopOf="@+id/status_text"
             app:layout_constraintHorizontal_bias="0.0"
