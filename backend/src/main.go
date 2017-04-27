@@ -26,7 +26,8 @@ func loginHandler(writer http.ResponseWriter, request *http.Request) {
 			// If there was an error, send an error message
 			http.Error(writer, err.Message, err.StatusCode)
 		} else {
-			// Send the token as a response
+			// Send the token as a response and set headers
+			writer.Header().Set("Content-Type", "application/json")
 			writer.WriteHeader(http.StatusOK)
 			json.NewEncoder(writer).Encode(token)
 		}
@@ -50,25 +51,31 @@ func signupHandler(writer http.ResponseWriter, request *http.Request) {
 			writer.WriteHeader(http.StatusOK)
 			writer.Write([]byte("User signup successful"))
 		}
+	} else {
+		// Request was not a POST
+		http.Error(writer, "API route only supports method POST", 400)
 	}
 }
 
 // Handles requests to get the photos of a user
 func getHandler(writer http.ResponseWriter, request *http.Request) {
 	// Only support GET requests
-	if request.Method == "GET" {
+	if request.Method == "POST" {
 		// Get photo array from request
 		photoArray, err := data.GetPhotos(request, model.MainDatabase)
 		if err != nil {
 			// If there was an error, send an error message
 			http.Error(writer, err.Message, err.StatusCode)
 		} else {
-			// Send the photo array as a response and Status OK
+			// Send the photo array as a response and Status OK as well as Content-Type JSON
+			writer.Header().Set("Content-Type", "application/json")
 			writer.WriteHeader(http.StatusOK)
 			json.NewEncoder(writer).Encode(photoArray)
 		}
+	} else {
+		// Request was not a POST
+		http.Error(writer, "API route only supports method POST", 400)
 	}
-
 }
 
 // Handles requests to upload photos
@@ -85,6 +92,9 @@ func uploadHandler(writer http.ResponseWriter, request *http.Request) {
 			writer.WriteHeader(http.StatusOK)
 			writer.Write([]byte("Photo succesfully uploaded"))
 		}
+	} else {
+		// Request was not a POST
+		http.Error(writer, "API route only supports method POST", 400)
 	}
 }
 
@@ -102,6 +112,9 @@ func removeHandler(writer http.ResponseWriter, request *http.Request) {
 			writer.WriteHeader(http.StatusOK)
 			writer.Write([]byte("Photo succesfully removed"))
 		}
+	} else {
+		// Request was not a POST
+		http.Error(writer, "API route only supports method POST", 400)
 	}
 }
 
