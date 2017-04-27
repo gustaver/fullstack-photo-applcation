@@ -1,5 +1,6 @@
 package me.oskareriksson.photofullstack;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +11,9 @@ import android.widget.TextView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.HttpURLConnection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -19,6 +23,7 @@ import java.util.concurrent.ExecutionException;
  * @version 1.0
  */
 public class MainActivity extends AppCompatActivity {
+    private TextView status;
 
     /**
      * Called when the activity starts
@@ -29,6 +34,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Get the status TextView
+        status = (TextView) findViewById(R.id.status_text);
+
+        // The user is already logged in, start intent to go to PhotoListActivity
+        if (!Models.TOKEN.equals("")) {
+            startActivity(new Intent(this, PhotoListActivity.class));
+        }
     }
 
     /**
@@ -37,62 +50,173 @@ public class MainActivity extends AppCompatActivity {
      * @param view The login button
      */
     public void login(View view) {
+        // The user is already logged in, start intent to go to PhotoListActivity
+        if (!Models.TOKEN.equals("")) {
+            startActivity(new Intent(this, PhotoListActivity.class));
+        }
+
         Log.d(Models.FEEDBACK_SUCCESS, "Called login method");
+        Request.Response response = sendRequest("/login");
 
-        // Get the status TextView and clear it
-        TextView status = (TextView) findViewById(R.id.status_text);
-        status.setText(null);
-
-        // Get input from all the input fields
-        String ip = ((EditText) findViewById(R.id.backend_ip_input)).getText().toString();
-        String port = ((EditText) findViewById(R.id.backend_port_input)).getText().toString();
-        String username = ((EditText) findViewById(R.id.username_input)).getText().toString();
-        String password = ((EditText) findViewById(R.id.password_input)).getText().toString();
-        Log.d(Models.FEEDBACK_SUCCESS, "Got text from input fields");
-
-        // Make sure that no input is empty
-        if (ip.length() == 0 || port.length() == 0 ||
-                username.length() == 0 || password.length() == 0) {
-            status.setText(getString(R.string.status_incomplete_input));
+        if (response == null) {
             return;
         }
 
-        // Create a JSON object with the login credentials
-        JSONObject credentials;
-        try {
-            credentials = new JSONObject();
-            credentials.put("username", username);
-            credentials.put("password", password);
-            Log.d(Models.FEEDBACK_SUCCESS, "Credentials JSON created " + credentials.toString());
-        } catch (JSONException e) {
-            Log.d("ERROR", e.getMessage());
-            status.setText(getString(R.string.status_malformed_credentials));
+        // Handle response
+        if (response.getResponseCode() == HttpURLConnection.HTTP_OK &&
+                !response.getResponseString().equals("")) {
+            // Login attempt successful, token received
+            Log.d(Models.FEEDBACK_SUCCESS, "Received: " + response.getResponseString());
+            try {
+                Models.TOKEN = (String) new JSONObject(
+                        response.getResponseString()).get("token");
+                setStatus(R.string.status_login_successful);
+
+                if (!Models.TOKEN.equals("")) {
+                    // A totally successful login, start intent to go to Photos
+                    Log.d(Models.FEEDBACK_SUCCESS, "Token set in app: " + Models.TOKEN);
+                    startActivity(new Intent(this, PhotoListActivity.class));
+                }
+            } catch (JSONException e) {
+                Log.d(Models.FEEDBACK_ERROR, "JSONException: " + e);
+                setStatus(R.string.status_internal_error);
+            }
+        } else if (response.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST) {
+            Log.d(Models.FEEDBACK_ERROR, "Malformed login credentials");
+            setStatus(R.string.status_malformed_credentials);
+        } else if (response.getResponseCode() == HttpURLConnection.HTTP_UNAUTHORIZED) {
+            Log.d(Models.FEEDBACK_ERROR, "Invalid username/password combination on login");
+            setStatus(R.string.status_malformed_credentials);
+        } else if (response.getResponseCode() == HttpURLConnection.HTTP_NOT_FOUND) {
+            Log.d(Models.FEEDBACK_ERROR, "Error connecting to server");
+            setStatus(R.string.status_malformed_url);
+        } else {
+            Log.d(Models.FEEDBACK_ERROR, "Error with response code "
+                    + response.getResponseCode());
+            setStatus(R.string.status_internal_error);
+        }
+    }
+
+    /**
+     * Sends a registration request to the server, signs up a new user if everything went good
+     *
+     * @param view The registration button
+     */
+    public void register(View view) {
+        Log.d(Models.FEEDBACK_SUCCESS, "Called register method");
+        Request.Response response = sendRequest("/signup");
+
+        if (response == null) {
             return;
         }
 
-        // Send login request to the backend
-        String result;
+        // Handle response
+        if (response.getResponseCode() == HttpURLConnection.HTTP_OK &&
+                !response.getResponseString().equals("")) {
+            Log.d(Models.FEEDBACK_ERROR, "Registration successful");
+            setStatus(R.string.status_register_successful);
+        } else if (response.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST ||
+                response.getResponseCode() == HttpURLConnection.HTTP_UNAUTHORIZED) {
+            Log.d(Models.FEEDBACK_ERROR, "Username already taken/malformed credentials");
+            setStatus(R.string.status_username_taken);
+        } else if (response.getResponseCode() == HttpURLConnection.HTTP_NOT_FOUND) {
+            Log.d(Models.FEEDBACK_ERROR, "Error connecting to server");
+            setStatus(R.string.status_malformed_url);
+        } else {
+            Log.d(Models.FEEDBACK_ERROR, "Error with response code "
+                    + response.getResponseCode());
+            setStatus(R.string.status_internal_error);
+        }
+    }
+
+    /**
+     * Sends a login or a registration request to the backend, depending on the specified API
+     *
+     * @param api The API to send the request to
+     * @return The message returned from the Request class
+     */
+    private Request.Response sendRequest(String api) {
+        // Get input and make sure that no input is empty
+        Map<String, String> input = getFields();
+        if (input.get("ip").length() == 0 || input.get("port").length() == 0 ||
+                input.get("username").length() == 0 || input.get("password").length() == 0) {
+            Log.d(Models.FEEDBACK_ERROR, "Input fields incomplete");
+            setStatus(R.string.status_incomplete_input);
+            return null;
+        } else {
+            Models.IP = input.get("ip");
+            Models.PORT = input.get("port");
+        }
+
+        // Create a JSON object with the login credentials, return if it fails
+        JSONObject credentials = createJSON(input.get("username"), input.get("password"));
+        if (credentials == null) {
+            setStatus(R.string.status_malformed_credentials);
+            return null;
+        }
+
+        // Send request to the backend
         try {
-            result = new Request().execute(
-                    "http://" + ip + ":" + port + "/login", credentials.toString()).get();
+            Request.Response response = new Request().execute(
+                    "http://" + Models.IP + ":" + Models.PORT + api,
+                    credentials).get();
+
+            return response;
         } catch (ExecutionException e) {
             Log.d(Models.FEEDBACK_ERROR, "Login ExecutionException " + e.getMessage());
-            return;
+            setStatus(R.string.status_internal_error);
+            return null;
         } catch (InterruptedException e) {
             Log.d(Models.FEEDBACK_ERROR, "Login InterruptedException " + e.getMessage());
-            return;
+            setStatus(R.string.status_internal_error);
+            return null;
+        }
+    }
+
+    /**
+     * Gets the IP, port, username and password fields on the login screen
+     *
+     * @return An array of strings with the values from the input fields
+     */
+    private Map<String, String> getFields() {
+        // Get input from all the input fields
+        Map<String, String> input = new HashMap<>();
+        input.put("ip", ((EditText) findViewById(R.id.backend_ip_input)).getText().toString());
+        input.put("port", ((EditText) findViewById(R.id.backend_port_input)).getText().toString());
+        input.put("username", ((EditText) findViewById(R.id.username_input)).getText().toString());
+        input.put("password", ((EditText) findViewById(R.id.password_input)).getText().toString());
+        Log.d(Models.FEEDBACK_SUCCESS, "Got text from input fields");
+        return input;
+    }
+
+    /**
+     * Generate a JSON object based on a username/password combination
+     *
+     * @param username The username as a string
+     * @param password The password as a string
+     * @return The generated JSON object
+     */
+    private JSONObject createJSON(String username, String password) {
+        // Create a JSON object with the username and password
+        JSONObject json = null;
+        try {
+            json = new JSONObject();
+            json.put("username", username);
+            json.put("password", password);
+            Log.d(Models.FEEDBACK_SUCCESS, "Credentials JSON created " + json.toString());
+        } catch (JSONException e) {
+            Log.d("ERROR", e.getMessage());
         }
 
-        // Display a message based on the status of the request
-        if (result.equals(Request.errors[0])) {
-            // No error, display login successful
-            status.setText(getString(R.string.status_login_successful));
-        } else if (result.equals(Request.errors[1])) {
-            // Unable to contact server
-            status.setText(getString(R.string.status_malformed_url));
-        } else if (result.equals(Request.errors[2])) {
-            // Invalid login credentials
-            status.setText(getString(R.string.status_malformed_credentials));
-        }
+        return json;
+    }
+
+    /**
+     * Sets the text of the status TextView to a given string
+     *
+     * @param stringCode The code of the string
+     */
+    public void setStatus(int stringCode) {
+        status.setText(getString(stringCode));
     }
 }
