@@ -1,7 +1,5 @@
 package me.oskareriksson.photofullstack;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -51,28 +49,31 @@ public class Request extends AsyncTask<Object, Void, Request.Response> {
         DataOutputStream writer;
 
         try {
-            // Open a URL connection
+            // Open a URL connection and do set up for sending the request
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Content-Type", "application/json");
             connection.setRequestProperty("Accept", "application/json");
             connection.setRequestProperty("Token", Models.TOKEN);
-
             connection.setDoOutput(true);
             connection.setDoInput(true);
+            connection.setConnectTimeout(2500);
             Log.d(Models.FEEDBACK_SUCCESS, "URL connection opened with " + url.toString());
 
-            // Send the request
+            // Open the output stream
             writer = new DataOutputStream(connection.getOutputStream());
             String toWrite = "";
-            // Send JSON if there is one
+
+            // Get JSON string if there is one
             if (jsonObject != null) {
                 toWrite = jsonObject.toString();
             }
+
+            // Send the request
             writer.writeBytes(toWrite);
             writer.flush();
             writer.close();
-            Log.d(Models.FEEDBACK_SUCCESS, "DataOutputStream wrote: " + toWrite);
+            Log.d(Models.FEEDBACK_SUCCESS, "DataOutputStream sent request");
 
             // Get the response code
             int responseCode = connection.getResponseCode();
@@ -98,9 +99,14 @@ public class Request extends AsyncTask<Object, Void, Request.Response> {
             return new Response(responseCode, responseString);
         } catch (IOException e) {
             Log.d(Models.FEEDBACK_ERROR, "Caught IOException: " + e.getMessage());
-            if (e.getMessage().contains("Connection refused")) {
+            if (e.getMessage().contains("Connection refused")
+                    || e.getMessage().contains("Unable to resolve host")
+                    || e.getMessage().contains("failed to connect")
+                    || e.getMessage().contains("connect timed out")) {
+                // Return a not found response on any of the error messages
                 return new Response(HttpURLConnection.HTTP_NOT_FOUND);
             } else {
+                // Return an unauthorized response on other IOExceptions
                 return new Response(HttpURLConnection.HTTP_UNAUTHORIZED);
             }
         }

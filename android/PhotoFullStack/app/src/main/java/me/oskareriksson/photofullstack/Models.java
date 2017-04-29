@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 /**
- * Models
+ * Holds constants and static methods used throughout the application
  *
  * @author Oskar Eriksson
  * @version 1.0
