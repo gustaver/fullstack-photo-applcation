@@ -1,11 +1,16 @@
 package me.oskareriksson.photofullstack;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
 /**
  * The PhotoListActivity is where the photos are displayed
@@ -35,6 +40,59 @@ public class PhotoListActivity extends AppCompatActivity {
         // Create a new PhotoHandler and get photos
         photoHandler = new PhotoHandler(this);
         photoHandler.getPhotos();
+
+        // Populate the ListView with photos using the custom adapter
+        ListAdapter listAdapter = new ListAdapter(this, Models.PHOTO_ARRAYLIST);
+        ((ListView) findViewById(R.id.photo_listview)).setAdapter(listAdapter);
+
+        // Set a long click listener for the photos in the list, which spawns a delete dialog
+        ((ListView) findViewById(R.id.photo_listview)).setOnItemLongClickListener(
+                new AdapterView.OnItemLongClickListener() {
+                    @Override
+                    public boolean onItemLongClick(AdapterView<?> adapter, View view, int pos, long id) {
+                        PhotoListActivity.this.generateDeleteDialog(pos).show();
+                        return true;
+                    }
+                });
+    }
+
+    /**
+     * Generate a dialog that asks the user if they want to delete the photo
+     *
+     * @param pos The position of the photo to be deleted
+     * @return A delete dialog with the option to delete the given photo
+     */
+    private AlertDialog generateDeleteDialog(final int pos) {
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
+
+
+        alertBuilder.setTitle(Models.PHOTO_ARRAYLIST.get(pos).getTitle());
+        alertBuilder.setMessage("Do you want to delete the photo?");
+
+        // Delete photo if the user clicks yes
+        alertBuilder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Delete the photo
+                PhotoListActivity.this.photoHandler.deletePhoto(pos);
+
+                // Refresh the PhotoListActivity
+                PhotoListActivity.this.finish();
+                startActivity(PhotoListActivity.this.getIntent());
+                dialog.dismiss();
+            }
+        });
+
+        // Dismiss dialog if the user clicks no
+        alertBuilder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+
+        });
+
+        return alertBuilder.create();
     }
 
     /**
@@ -59,11 +117,11 @@ public class PhotoListActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.gallery_action_button:
-                Log.d(Models.FEEDBACK_SUCCESS, "Gallery action button pressed, calling upload");
+                Log.d(Models.FEEDBACK_SUCCESS, "Gallery action button pressed");
                 photoHandler.galleryActivity();
                 return true;
             case R.id.camera_action_button:
-                Log.d(Models.FEEDBACK_SUCCESS, "Camera action button pressed, calling upload");
+                Log.d(Models.FEEDBACK_SUCCESS, "Camera action button pressed");
                 photoHandler.cameraActivity();
                 return true;
             default:
@@ -82,12 +140,10 @@ public class PhotoListActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == Models.GALLERY_PHOTO_REQUEST && resultCode == RESULT_OK) {
-            // The user wants to pick an image from the gallery
-            photoHandler.handlePhotoFromGallery(data);
-        } else if (requestCode == Models.CAMERA_PHOTO_REQUEST && resultCode == RESULT_OK) {
-            // The user wants to take a photo with the camera
-            photoHandler.handleCamera(data);
+        if ((requestCode == Models.GALLERY_PHOTO_REQUEST
+                || requestCode == Models.CAMERA_PHOTO_REQUEST) && resultCode == RESULT_OK) {
+            // The user wants to upload a photo from the gallery/camera
+            photoHandler.handlePhoto(requestCode, data);
         }
     }
 }

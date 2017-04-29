@@ -58,22 +58,24 @@ public class MainActivity extends AppCompatActivity {
         Log.d(Models.FEEDBACK_SUCCESS, "Called login method");
         Request.Response response = sendRequest("/login");
 
+        // Return if the request failed
         if (response == null) {
             return;
         }
 
-        // Handle response
+        // Handle response depending on the status code returned from the backend
         if (response.getResponseCode() == HttpURLConnection.HTTP_OK &&
                 !response.getResponseString().equals("")) {
             // Login attempt successful, token received
             Log.d(Models.FEEDBACK_SUCCESS, "Received: " + response.getResponseString());
             try {
+                // Set the token to the value of the token field in the JSON response
                 Models.TOKEN = (String) new JSONObject(
                         response.getResponseString()).get("token");
                 setStatus(R.string.status_login_successful);
 
+                // If the token is set, the login was successful, go to PhotoListActivity
                 if (!Models.TOKEN.equals("")) {
-                    // A totally successful login, start intent to go to Photos
                     Log.d(Models.FEEDBACK_SUCCESS, "Token set in app: " + Models.TOKEN);
                     startActivity(new Intent(this, PhotoListActivity.class));
                 }
@@ -106,11 +108,12 @@ public class MainActivity extends AppCompatActivity {
         Log.d(Models.FEEDBACK_SUCCESS, "Called register method");
         Request.Response response = sendRequest("/signup");
 
+        // Return if the request failed
         if (response == null) {
             return;
         }
 
-        // Handle response
+        // Handle response depending on the status code returned from the backend
         if (response.getResponseCode() == HttpURLConnection.HTTP_OK &&
                 !response.getResponseString().equals("")) {
             Log.d(Models.FEEDBACK_ERROR, "Registration successful");
@@ -138,14 +141,16 @@ public class MainActivity extends AppCompatActivity {
     private Request.Response sendRequest(String api) {
         // Get input and make sure that no input is empty
         Map<String, String> input = getFields();
-        if (input.get("ip").length() == 0 || input.get("port").length() == 0 ||
-                input.get("username").length() == 0 || input.get("password").length() == 0) {
+        if (Models.validateInput(input)) {
+            // If input was valid, set constant strings to the desired values
+            Models.IP = input.get("ip");
+            Models.PORT = input.get("port");
+            Models.USER = input.get("username");
+        } else {
+            // If the input was incomplete, display a status message and return null
             Log.d(Models.FEEDBACK_ERROR, "Input fields incomplete");
             setStatus(R.string.status_incomplete_input);
             return null;
-        } else {
-            Models.IP = input.get("ip");
-            Models.PORT = input.get("port");
         }
 
         // Create a JSON object with the login credentials, return if it fails
@@ -176,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Gets the IP, port, username and password fields on the login screen
      *
-     * @return An array of strings with the values from the input fields
+     * @return A map of strings with the values from the input fields
      */
     private Map<String, String> getFields() {
         // Get input from all the input fields

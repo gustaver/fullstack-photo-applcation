@@ -17,4 +17,9 @@
     <string name="upload_button">Upload photo</string>
     <string name="action_button_gallery">Pick photo from gallery</string>
     <string name="action_button_camera">Take a photo</string>
+    <string name="title_hint">Title</string>
+    <string name="description_hint">Description</string>
+    <string name="action_button_upload">Upload</string>
+    <string name="upload_success">Upload successful</string>
+    <string name="upload_failure">Upload failed</string>
 </resources>

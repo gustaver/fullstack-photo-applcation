@@ -56,6 +56,7 @@ public class Request extends AsyncTask<Object, Void, Request.Response> {
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Content-Type", "application/json");
             connection.setRequestProperty("Accept", "application/json");
+            connection.setRequestProperty("Token", Models.TOKEN);
 
             connection.setDoOutput(true);
             connection.setDoInput(true);
