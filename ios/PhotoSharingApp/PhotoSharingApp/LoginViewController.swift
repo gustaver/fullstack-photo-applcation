@@ -14,14 +14,23 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet var passwordTextInput: UITextField!
     @IBOutlet var portTextInput: UITextField!
     @IBOutlet var ipTextInput: UITextField!
+    @IBOutlet var loginButton: UIButton!
+    @IBOutlet var signupButton: UIButton!
+    @IBOutlet var backgroundImage: UIImageView!
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        // For quick login to app, TODO: Remove once done testing
         usernameTextInput.text = "gustave"
         passwordTextInput.text = "12345"
         portTextInput.text = "8080"
         ipTextInput.text = "192.168.1.2"
+        
+        // Choose random image for background
+        let randomImageNumber = arc4random_uniform(7) + 1
+        let randomImageNumberAsString = String(randomImageNumber)
+        backgroundImage.image = UIImage(named: randomImageNumberAsString)
         
         // Set view controller to delegate for all text inputs
         self.usernameTextInput.delegate = self
@@ -33,6 +42,12 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         let tap = UITapGestureRecognizer(target: self.view, action: #selector(UIView.endEditing(_:)))
         tap.cancelsTouchesInView = false
         self.view.addGestureRecognizer(tap)
+        
+        // Rounded corners on buttons
+        loginButton.layer.cornerRadius = 3
+        loginButton.clipsToBounds = true
+        signupButton.layer.cornerRadius = 3
+        signupButton.clipsToBounds = true
     }
 
     override func didReceiveMemoryWarning() {
