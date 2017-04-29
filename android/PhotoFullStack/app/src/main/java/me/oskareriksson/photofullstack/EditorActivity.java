@@ -113,6 +113,11 @@ public class EditorActivity extends AppCompatActivity {
         return input;
     }
 
+    /**
+     * Makes sure that the edited photo is valid, then uploads the photo to the backend
+     *
+     * @return
+     */
     private boolean uploadEditedPhoto() {
         // If there is no photo to be uploaded, return
         if (photo == null) {
