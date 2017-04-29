@@ -165,7 +165,6 @@ public class MainActivity extends AppCompatActivity {
             Request.Response response = new Request().execute(
                     "http://" + Models.IP + ":" + Models.PORT + api,
                     credentials).get();
-
             return response;
         } catch (ExecutionException e) {
             Log.d(Models.FEEDBACK_ERROR, "Login ExecutionException " + e.getMessage());
