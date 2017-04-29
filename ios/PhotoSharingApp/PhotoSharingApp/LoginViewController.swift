@@ -49,6 +49,16 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         signupButton.layer.cornerRadius = 3
         signupButton.clipsToBounds = true
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        // Hide navigation bar
+        self.navigationController?.setNavigationBarHidden(true, animated: true)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        // Show navigation bar
+        self.navigationController?.setNavigationBarHidden(false, animated: true)
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

@@ -15,6 +15,8 @@ class PhotosTableViewController: UITableViewController, UIImagePickerControllerD
     
     // Image that user takes in camera or in image picker, stored to be sent to photo editing view, does not need to be set
     private var image: UIImage!
+    @IBOutlet var galleryBarButton: UIBarButtonItem!
+    @IBOutlet var cameraBarButton: UIBarButtonItem!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -105,8 +107,16 @@ class PhotosTableViewController: UITableViewController, UIImagePickerControllerD
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        // Disable camera and gallery buttons
+        cameraBarButton.isEnabled = false
+        galleryBarButton.isEnabled = false
+        
         // Create callback for reqest 
         func callbackPhotoRequest (title: String, message: String, success: Bool) {
+            // Enable camera and gallery buttons
+            cameraBarButton.isEnabled = true
+            galleryBarButton.isEnabled = true
+            
             if success {
                 // Request was succesful, photo has been removed from array, display message and reload tableView
                 self.displayAlert(title: title, alertText: message, buttonText: "Ok")
@@ -131,14 +141,21 @@ class PhotosTableViewController: UITableViewController, UIImagePickerControllerD
     }
     
     func loadPhotos() {
-        // TODO: Consider disabling user interaction ? 
-        // Show loading and turn off interaction with application
+        // Show loading indicator
         activityIndicator.startAnimating()
+        
+        // Disable camera and gallery buttons 
+        cameraBarButton.isEnabled = false
+        galleryBarButton.isEnabled = false
         
         // Create callback function to be called when request finishes
         func callbackPhotoRequest(success: Bool) {
             // Stop loading and turn on interaction with application 
             activityIndicator.stopAnimating()
+            
+            // Enable camera and gallery buttons
+            cameraBarButton.isEnabled = true
+            galleryBarButton.isEnabled = true
             
             if success {
                 // Request was succesful, load photos into tableview
