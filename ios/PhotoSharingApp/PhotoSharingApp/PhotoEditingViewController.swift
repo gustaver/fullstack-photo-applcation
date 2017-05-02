@@ -68,7 +68,7 @@ class PhotoEditingViewController: UIViewController, UITextFieldDelegate {
             func callbackRequestComplete(title: String, message: String, succesful: Bool) {
                 // Enable upload and back button
                 uploadButton.isEnabled = true
-                self.navigationItem.setHidesBackButton(true, animated: true)
+                self.navigationItem.setHidesBackButton(false, animated: true)
                 
                 // Check if login was succesful
                 if succesful {
