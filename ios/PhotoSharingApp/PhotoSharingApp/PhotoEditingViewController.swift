@@ -19,6 +19,9 @@ class PhotoEditingViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet var titleTextField: UITextField!
     @IBOutlet var descriptionTextField: UITextField!
     
+    // Upload button
+    @IBOutlet var uploadButton: UIButton!
+    
     // Photo object, populated during editing and sent in request 
     var photo: Photo!
     
@@ -39,6 +42,10 @@ class PhotoEditingViewController: UIViewController, UITextFieldDelegate {
         let tap = UITapGestureRecognizer(target: self.view, action: #selector(UIView.endEditing(_:)))
         tap.cancelsTouchesInView = false
         self.view.addGestureRecognizer(tap)
+        
+        // Rounded corners on upload button 
+        uploadButton.layer.cornerRadius = 3
+        uploadButton.clipsToBounds = true
     }
 
     override func didReceiveMemoryWarning() {
@@ -49,13 +56,20 @@ class PhotoEditingViewController: UIViewController, UITextFieldDelegate {
     @IBAction func onUploadPhotoPress(_ sender: Any) {
         // Check that there is input in both username field and password field
         if titleTextField.hasText && descriptionTextField.hasText {
+            // Disable upload and back button
+            uploadButton.isEnabled = false
+            self.navigationItem.setHidesBackButton(true, animated: true)
+            
             // Set the title and the description of the photo object in field
             photo.Title = titleTextField.text
             photo.Description = descriptionTextField.text
             
             // Callback function to be sent into upload request
             func callbackRequestComplete(title: String, message: String, succesful: Bool) {
-                //TODO: Consider displaying an alert of succesful login here
+                // Enable upload and back button
+                uploadButton.isEnabled = true
+                self.navigationItem.setHidesBackButton(false, animated: true)
+                
                 // Check if login was succesful
                 if succesful {
                     self.onUploadSuccesful()

@@ -160,7 +160,7 @@ class PhotosTableViewController: UITableViewController, UIImagePickerControllerD
             if success {
                 // Request was succesful, load photos into tableview
                 self.onPhotosSuccessfullyLoaded()
-                if PhotoManager.sharedInstance.PhotoArray.isEmpty {
+                if (PhotoManager.sharedInstance.PhotoArray.isEmpty) {
                     // No photos, display message
                     self.displayAlert(title: "Whoops!", alertText: "Looks like you don't have any photos, go ahead and add some!", buttonText: "Ok")
                 }
