@@ -66,7 +66,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
 
     @IBAction func onPressLogin(_ sender: Any) {
         // Check that there is input in both username field and password field
-        if usernameTextInput.hasText && passwordTextInput.hasText {
+        if (usernameTextInput.hasText && passwordTextInput.hasText && ipTextInput.hasText && portTextInput.hasText) {
             // Set the port and IP of AuthenticationManager (if bad, request will fail anyway) 
             AuthenticationManager.sharedInstance.port = portTextInput.text!
             AuthenticationManager.sharedInstance.ip = ipTextInput.text!
@@ -89,7 +89,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     @IBAction func onPressSignup(_ sender: Any) {
         // Check that there is input in both username and password fields 
-        if usernameTextInput.hasText && passwordTextInput.hasText {
+        if (usernameTextInput.hasText && passwordTextInput.hasText && ipTextInput.hasText && portTextInput.hasText) {
             // Set the port and IP of AuthenticationManager (if bad, request will fail anyway)
             AuthenticationManager.sharedInstance.port = portTextInput.text!
             AuthenticationManager.sharedInstance.ip = ipTextInput.text!
