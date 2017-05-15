@@ -7,6 +7,7 @@ import Foundation
 import SwiftyJSON
 import Alamofire
 
+// Class for handling all authentication requests to backend, as well as storing information about currently logged on user. 
 class AuthenticationManager {
 
     // Global variable "singleton"
@@ -32,6 +33,7 @@ class AuthenticationManager {
         self.username = ""
     }
 
+    // Method used when logging in. Request made to backend using username and password parameters. Callback on outcome of request.
     func loginUser(username: String, password: String, completeCallback: @escaping (_ title: String, _ message: String, _ succesful: Bool) -> Void) {
         // Clear Token and username for each login
         self.Token = ""
@@ -74,6 +76,8 @@ class AuthenticationManager {
         }
     }
 
+    // Method used for signup, takes username and password, as well as callback. Make request using username and password. Callback used 
+    // on outcome of request.
     func signupUser(username: String, password: String, completeCallback: @escaping (_ title: String, _ message: String, _ succesful: Bool) -> Void) {
         // Clear username for each signup 
         self.username = ""

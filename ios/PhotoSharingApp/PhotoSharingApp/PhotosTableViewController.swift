@@ -8,6 +8,7 @@
 
 import UIKit
 
+// View controller for photo list view. Handles logic and some view manipulation.
 class PhotosTableViewController: UITableViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     // Activity indicator to show when loading photos
@@ -18,6 +19,7 @@ class PhotosTableViewController: UITableViewController, UIImagePickerControllerD
     @IBOutlet var galleryBarButton: UIBarButtonItem!
     @IBOutlet var cameraBarButton: UIBarButtonItem!
     
+    // Method called when view loads. Initial setup.
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -32,6 +34,7 @@ class PhotosTableViewController: UITableViewController, UIImagePickerControllerD
         view.addSubview(activityIndicator)
     }
     
+    // Method called when view will appear. Load photos into list.
     override func viewWillAppear(_ animated: Bool) {
         // Load phtoos. List of photos should reload every time the view appears
         self.loadPhotos()
@@ -41,17 +44,18 @@ class PhotosTableViewController: UITableViewController, UIImagePickerControllerD
         super.didReceiveMemoryWarning()
     }
 
-    // MARK: - Table view data source
-
+    // Number of sections in the table view.
     override func numberOfSections(in tableView: UITableView) -> Int {
         // Only one section for photos
         return 1
     }
 
+    // Number of cells in table view.
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return PhotoManager.sharedInstance.PhotoArray.count
     }
     
+    // Create cells for table view, according to rows of table view.
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         // Create cell
         let photoCell = tableView.dequeueReusableCell(withIdentifier: "PhotoCell") as! PhotoTableViewCell
@@ -73,6 +77,7 @@ class PhotosTableViewController: UITableViewController, UIImagePickerControllerD
         return photoCell
     }
     
+    // Method called when camera button pressed. Present camera view if ready.
     @IBAction func onCameraButtonPress(_ sender: Any) {
         // Present the camera if ready
         if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.camera){
@@ -84,6 +89,7 @@ class PhotosTableViewController: UITableViewController, UIImagePickerControllerD
         }
     }
     
+    // Method called when gallery button pressed. Present gallery view if ready.
     @IBAction func onGalleryButtonPress(_ sender: Any) {
         if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.photoLibrary){
             let imagePicker = UIImagePickerController()
@@ -94,6 +100,7 @@ class PhotosTableViewController: UITableViewController, UIImagePickerControllerD
         }
     }
     
+    // Method called when image has been chosen (either through taking a photo or choosing from gallery. Set image and present editing view.
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingImage image: UIImage!, editingInfo: [NSObject : AnyObject]!){
         self.image = image
         // Dismiss view
@@ -102,10 +109,13 @@ class PhotosTableViewController: UITableViewController, UIImagePickerControllerD
         performSegue(withIdentifier: "PhotoEditingView", sender: self)
     }
     
+    // Method to allow user to delete rows.
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
     }
     
+    // Method called when user swipes to delete photo. Request to delete photo from backend is made, and callback method is sent as parameter. 
+    // Display alert dependent on succesful or failed photo delete.
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         // Disable camera and gallery buttons
         cameraBarButton.isEnabled = false
@@ -129,6 +139,7 @@ class PhotosTableViewController: UITableViewController, UIImagePickerControllerD
         PhotoManager.sharedInstance.removePhoto(completeCallback: callbackPhotoRequest, index: indexPath.row)
     }
     
+    // Preparations before trasition to photo editiing view.
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Check the segue to be performed
         if segue.identifier == "PhotoEditingView" {
@@ -140,6 +151,7 @@ class PhotosTableViewController: UITableViewController, UIImagePickerControllerD
         }
     }
     
+    // Method used for loading photos into tableview. Request is made to backend, and callback method is used in request.
     func loadPhotos() {
         // Show loading indicator
         activityIndicator.startAnimating()
@@ -172,12 +184,14 @@ class PhotosTableViewController: UITableViewController, UIImagePickerControllerD
         PhotoManager.sharedInstance.getPhotos(completeCallback: callbackPhotoRequest)
     }
     
+    // Method used when photos successfully loaded into tableview. Reload table view on successful load.
     func onPhotosSuccessfullyLoaded() {
         DispatchQueue.main.async {
             self.tableView.reloadData()
         }
     }
     
+    // Helper method for displaying alerts. 
     func displayAlert(title: String, alertText: String, buttonText: String) {
         let alert = UIAlertController(title: title, message: alertText, preferredStyle: UIAlertControllerStyle.alert)
         alert.addAction(UIAlertAction(title: buttonText, style: UIAlertActionStyle.default, handler: nil))

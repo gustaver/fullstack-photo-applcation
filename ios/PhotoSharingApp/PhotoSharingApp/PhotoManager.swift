@@ -7,6 +7,7 @@ import Foundation
 import SwiftyJSON
 import Alamofire
 
+// Helper class (singleton) photomanager. Handles all requests which have to do with photos (get, upload, remove). Stores photos (array).
 class PhotoManager {
 
     static let sharedInstance = PhotoManager()
@@ -15,6 +16,7 @@ class PhotoManager {
     init() {
     }
 
+    // Method used when getting photos for photo list. Uses logged in user to make request to backend to get all their photos from database.
     func getPhotos(completeCallback: @escaping (_ success: Bool) -> Void) {
         // Create headers with Token
         let headers: HTTPHeaders = ["Token": AuthenticationManager.sharedInstance.Token]
@@ -48,6 +50,8 @@ class PhotoManager {
         }
     }
 
+    // Method used when uploading photo. Request made to backend, with associated callback depeding on outcome, and index of photo 
+    // in shared photo array.
     func uploadPhoto(completeCallback: @escaping (_ title: String, _ message: String, _ succesful: Bool) -> Void, photo: Photo) {
         // Create headers with Token
         let headers: HTTPHeaders = ["Token": AuthenticationManager.sharedInstance.Token]
@@ -72,6 +76,7 @@ class PhotoManager {
         }
     }
 
+    // Method used when removing photos. Request made to backend with callback, as well as index of photo in photo array.
     func removePhoto(completeCallback: @escaping (_ title: String, _ message: String, _ succesful: Bool) -> Void, index: Int) {
         // Create headers with Token
         let headers: HTTPHeaders = ["Token": AuthenticationManager.sharedInstance.Token]
