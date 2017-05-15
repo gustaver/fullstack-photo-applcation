@@ -8,6 +8,7 @@
 
 import UIKit
 
+// View controller for photo editing view
 class PhotoEditingViewController: UIViewController, UITextFieldDelegate {
     
     // Image to be set from previous view controller (PhotoTableView)
@@ -25,6 +26,7 @@ class PhotoEditingViewController: UIViewController, UITextFieldDelegate {
     // Photo object, populated during editing and sent in request 
     var photo: Photo!
     
+    // Method called when view is loaded. Inital setup.
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -53,6 +55,8 @@ class PhotoEditingViewController: UIViewController, UITextFieldDelegate {
         // Dispose of any resources that can be recreated.
     }
     
+    // Method called when upload button is pressed. Check that both title and description field are set. Disable buttons and make request to 
+    // upload photo, passing callback function as parameter.
     @IBAction func onUploadPhotoPress(_ sender: Any) {
         // Check that there is input in both username field and password field
         if titleTextField.hasText && descriptionTextField.hasText {
@@ -88,6 +92,8 @@ class PhotoEditingViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
+    // Method called when return button pressed during text field editiing. Different functionality dependent on which text field is being 
+    // editied.
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         // Check if title or description text field 
         if textField.returnKeyType == UIReturnKeyType.next {
@@ -107,6 +113,7 @@ class PhotoEditingViewController: UIViewController, UITextFieldDelegate {
         return false
     }
     
+    // Method called on succesful upload. Alert is displayed with callback for button press.
     func onUploadSuccesful() {
         // Callback for when OK is pressed on alert, pop back to photo table view
         func onPressOk(action: UIAlertAction) {
@@ -123,6 +130,7 @@ class PhotoEditingViewController: UIViewController, UITextFieldDelegate {
         self.present(alert, animated: true, completion: nil)
     }
     
+    // Helper function for creating photo from photo displayed in editing view. Encode photo to base64 and create photo object. 
     func createPhoto() {
         // Photo to be populated 
         let photo = Photo()

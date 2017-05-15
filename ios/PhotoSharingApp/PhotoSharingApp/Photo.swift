@@ -7,6 +7,7 @@ import Foundation
 import SwiftyJSON
 import Alamofire
 
+// Photo class. Model for reflecting photos in database. 
 class Photo: NSObject {
 
     var JpgBase64: String?

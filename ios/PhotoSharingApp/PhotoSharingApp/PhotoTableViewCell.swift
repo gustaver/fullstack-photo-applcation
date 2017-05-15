@@ -8,6 +8,7 @@
 
 import UIKit
 
+// Custome table view cell for photos. 
 class PhotoTableViewCell: UITableViewCell {
 
     

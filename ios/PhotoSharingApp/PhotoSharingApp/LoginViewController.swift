@@ -8,6 +8,7 @@
 
 import UIKit
 
+// View controller for login view. Handles all logic and some view manipulation. 
 class LoginViewController: UIViewController, UITextFieldDelegate {
 
     @IBOutlet var usernameTextInput: UITextField!
@@ -18,7 +19,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet var signupButton: UIButton!
     @IBOutlet var backgroundImage: UIImageView!
     
-    
+    // Initial setup when view loads.
     override func viewDidLoad() {
         super.viewDidLoad()
         // For quick login to app, TODO: Remove once done testing
@@ -50,11 +51,13 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         signupButton.clipsToBounds = true
     }
     
+    // Initial setup before view appears (going from photo list to login)
     override func viewWillAppear(_ animated: Bool) {
         // Hide navigation bar
         self.navigationController?.setNavigationBarHidden(true, animated: true)
     }
     
+    // Before view dissapears (going from login to photo list)
     override func viewWillDisappear(_ animated: Bool) {
         // Show navigation bar
         self.navigationController?.setNavigationBarHidden(false, animated: true)
@@ -64,6 +67,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         super.didReceiveMemoryWarning()
     }
 
+    // Method called when login button pressed. Login request is made to backend, and result is used to either move to photo view, or display
+    // error message.
     @IBAction func onPressLogin(_ sender: Any) {
         // Check that there is input in both username field and password field
         if (usernameTextInput.hasText && passwordTextInput.hasText && ipTextInput.hasText && portTextInput.hasText) {
@@ -87,6 +92,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
+    // Method called when signup button pressed. Sign up request made to backend, and result used to either move to next view or display 
+    // error message.
     @IBAction func onPressSignup(_ sender: Any) {
         // Check that there is input in both username and password fields 
         if (usernameTextInput.hasText && passwordTextInput.hasText && ipTextInput.hasText && portTextInput.hasText) {
@@ -112,6 +119,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
+    // Method called when return key pressed while using text field. Different functionality for each text field.
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if textField.returnKeyType == UIReturnKeyType.next {
             // Try to find next responder
@@ -130,12 +138,14 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         return false
     }
     
+    // Helper function for displaying alerts
     func displayAlert(title: String, alertText: String, buttonText: String) {
         let alert = UIAlertController(title: title, message: alertText, preferredStyle: UIAlertControllerStyle.alert)
         alert.addAction(UIAlertAction(title: buttonText, style: UIAlertActionStyle.default, handler: nil))
         self.present(alert, animated: true, completion: nil)
     }
     
+    // Method called when login request is succesful. Clear all text fields and then transition in photo list view.
     func onLoginSuccesful() {
         // Clear all text fields 
         usernameTextInput.text = ""
