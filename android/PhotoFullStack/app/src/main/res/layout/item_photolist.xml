@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="225dp">
+
+        <ImageView
+            android:id="@+id/photolist_item_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginTop="0dp"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="bottom|center_horizontal"
+            android:background="#AA000000"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="125dp">
+
+            <TextView
+                android:id="@+id/photolist_item_title"
+                android:layout_width="0dp"
+                android:layout_height="25dp"
+                android:layout_marginBottom="-1dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
+                android:layout_marginTop="0dp"
+                android:paddingLeft="6dp"
+                android:paddingRight="6dp"
+                android:textColor="#ffffffff"
+                app:layout_constraintBottom_toTopOf="@+id/photolist_item_description"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/photolist_item_date"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/photolist_item_description"
+                android:layout_width="0dp"
+                android:layout_height="25dp"
+                android:layout_margin="0dp"
+                android:layout_marginBottom="0dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
+                android:paddingLeft="6dp"
+                android:paddingRight="6dp"
+                android:textColor="#ffffffff"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/photolist_item_title" />
+
+            <TextView
+                android:id="@+id/photolist_item_date"
+                android:layout_width="0dp"
+                android:layout_height="25dp"
+                android:layout_marginRight="0dp"
+                android:paddingLeft="6dp"
+                android:paddingRight="6dp"
+                android:textAlignment="textEnd"
+                android:textColor="#ffffffff"
+                app:layout_constraintBaseline_toBaselineOf="@+id/photolist_item_title"
+                app:layout_constraintLeft_toRightOf="@id/photolist_item_title"
+                app:layout_constraintRight_toRightOf="parent" />
+        </android.support.constraint.ConstraintLayout>
+
+    </FrameLayout>
+
+</LinearLayout>
