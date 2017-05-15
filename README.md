@@ -6,7 +6,11 @@ PhotoFullStack is a photo application which consists of a back-end built in Go u
 The features of the application are displaying, adding and removing a user's photos and login functionality.
 
 ## How to use
-This will be updated as the project evolves.
+### Backend
+Install MongoDB and create a database called `main` with a collection `users` which has a unique field `username`. Install Go and run the file `main.go` to start the backend. The backend will listen on port `8080`.
+
+### Android
+Install the APK file `photofullstack.apk` in the `android/` folder. Run it and connect to the IP and port that the backend is running on. Type in your username and click `Register`, then you can log in. Use the camera or the gallery to upload photos, the icons are in the top right corner when logged in.
 
 ## Testing
 Unit testing will be used thoroughly for the development of the back-end, where we will be using the Go `testing` package. The front-end applications are a bit harder to test properly, and will be tested and debugged while using the applications.
