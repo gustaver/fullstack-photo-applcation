@@ -24,6 +24,15 @@ public class Models {
     public static ArrayList<Photo> PHOTO_ARRAYLIST = new ArrayList<>();
     public static Photo PHOTO_EDIT = null;
 
+    public static int[] BACKGROUNDS = new int[] {
+            R.drawable.beach,
+            R.drawable.flower,
+            R.drawable.groynes,
+            R.drawable.mountains,
+            R.drawable.sunset,
+            R.drawable.wood,
+    };
+
 
     /**
      * Make sure that all values in a map is set

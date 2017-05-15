@@ -1,6 +1,8 @@
 package me.oskareriksson.photofullstack;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,7 +16,9 @@ import org.json.JSONObject;
 import java.net.HttpURLConnection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * The main activity is the login screen
@@ -34,6 +38,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Set background
+        int backgroundIndex = (new Random()).nextInt(Models.BACKGROUNDS.length);
+        findViewById(R.id.wrapper).setBackgroundResource(Models.BACKGROUNDS[backgroundIndex]);
 
         // Get the status TextView
         status = (TextView) findViewById(R.id.status_text);
